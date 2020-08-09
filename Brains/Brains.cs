@@ -85,34 +85,32 @@ namespace Scalp.Brains
 			}
 		}
 
-		private string GetStringFromVariableOrLiteral(string printArgument)
+		private string GetStringFromVariableOrLiteral(string argument)
 		{
-			if (_variables.VariableExists(printArgument, _types.GetType("String")))
+			if (_variables.VariableExists(argument, _types.GetType("String")))
 			{
-				return _variables.GetVariable(printArgument).PrimitiveValue as string;
+				return _variables.GetVariable(argument).PrimitiveValue as string;
 			}
-			else if (_variables.VariableExists(printArgument))
+			else if (_variables.VariableExists(argument))
 			{
-				return $"Error! Variable {printArgument} is not of type String.";
+				return $"Error! Variable {argument} is not of type String.";
 			}
 
-			string printResult;
-			if (printArgument.StartsWith('"'))
+			else if (argument.StartsWith('"'))
 			{
-				if (printArgument == "\"" || ! printArgument.EndsWith('"'))
+				if (argument == "\"" || ! argument.EndsWith('"'))
 				{
-					printResult = "Error! Expected string end (the closing \" is missing).";
+					return "Error! Expected string end (the closing \" is missing).";
 				}
 				else // it's a normal string literal
 				{
-					printResult = StringOperations.TrimQuotes(printArgument);
+					return StringOperations.TrimQuotes(argument);
 				}
 			}
 			else
 			{
-				printResult = "Error! " + printArgument + " is not a string literal!";
+				return "Error! " + argument + " is not a string literal!";
 			}
-			return printResult;
 		}
 	}
 }
