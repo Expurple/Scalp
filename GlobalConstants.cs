@@ -7,6 +7,6 @@ namespace Scalp
 	static class GlobalConstants
 	{
 		public const string VERSION = "v0.1.0";
-		public const string VERSION_DATE = "Aug 2020";
+		public const string VERSION_DATE = "9 Aug 2020";
 	}
 }
