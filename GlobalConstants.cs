@@ -6,8 +6,7 @@ namespace Scalp
 {
 	static class GlobalConstants
 	{
-		public static readonly string DIGITS = "1234567890";
-		public static readonly Regex VALID_IDENTIFIER_CHARS_REGEX =
-									new Regex("/[a-zA-Z0-9_-]/");
+		public const string VERSION = "v0.1.0";
+		public const string VERSION_DATE = "Aug 2020";
 	}
 }

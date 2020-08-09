@@ -9,8 +9,9 @@ namespace Scalp
 			var state = new ProgramState.FullProgramState();
 			var brains = new Brains.Brains(state);
 
-			Console.WriteLine("Scalp");
+			Console.WriteLine($"Scalp {GlobalConstants.VERSION} ({GlobalConstants.VERSION_DATE})");
 			Console.WriteLine("Visit https://github.com/Expurple/Scalp for more info.");
+			
 			while (true)
 			{
 				Console.Write(">>> ");
