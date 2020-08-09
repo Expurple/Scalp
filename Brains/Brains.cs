@@ -84,42 +84,26 @@ namespace Scalp.Brains
 				return;
 			}
 
-			Message = "Error: the grammar of this line is incorrect. What did you mean by that?";
-			MessageFlag = true;
+			throw new Exception("Error: the grammar of this line is incorrect. What did you mean by that?");
 		}
 
 		private void ReactAtStringDefinition(List<string> tokens)
 		{
 			if (!IsValidIdentifierName(tokens[1]))
 			{
-				Message = $"Error! {tokens[1]} is an invalid identifier.\n" +
+				throw new Exception($"Error! {tokens[1]} is an invalid identifier.\n" +
 							"Identifiers can only contain letters, digits, underscores and dashes\n" +
-							"and must not start with a digit.";
-				MessageFlag = true;
-				return;
+							"and must not start with a digit.");
 			}
 
 			var newVariable = new ScalpVariable(tokens[1], _types.GetType("String"));
-			TryAddVariable(newVariable);
-			if (_variables.VariableExists(newVariable.Name, newVariable.Type)
-				&& tokens.Count == 4 && tokens[2] == "=")
+			_variables.AddVariable(newVariable); // throws redefinition exceptions
+			if (tokens.Count == 4 && tokens[2] == "=")
 			{
 				newVariable.PrimitiveValue = GetStringRvalue(tokens[3]);
 			}
 		}
 
-		private void TryAddVariable(ScalpVariable variable)
-		{
-			try
-			{
-				_variables.AddVariable(variable);
-			}
-			catch (Exception e) // Exceptions occure when redefining a cymbol
-			{
-				Message = e.Message;
-				MessageFlag = true;
-			}
-		}
 		private string GetStringRvalue(string argument)
 		{
 			if (_variables.VariableExists(argument, _types.GetType("String")))
@@ -144,7 +128,7 @@ namespace Scalp.Brains
 			}
 			else
 			{
-				throw new Exception($"Error! {argument} is not a string literal!");
+				throw new Exception($"Error! {argument} is not a string literal nor a variable!");
 			}
 		}
 
