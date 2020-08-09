@@ -15,7 +15,16 @@ namespace Scalp
 			{
 				Console.Write(">>> ");
 				string input = Console.ReadLine();
-				brains.ReactAt(input);
+
+				try
+				{
+					brains.ReactAt(input);
+				}
+				catch (Exception e)
+				{
+					Console.Write(e.Message);
+					Console.Write(e.Message.EndsWith('\n') ? "" : "\n");
+				}
 
 				if (brains.MessageFlag)
 				{
