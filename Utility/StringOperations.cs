@@ -6,7 +6,7 @@ namespace Scalp.Utility
 {
 	static class StringOperations
 	{
-		public static string RemoveStringQuotes(string orig)
+		public static string TrimQuotes(string orig)
 		{
 			return orig[1..^1];
 		}

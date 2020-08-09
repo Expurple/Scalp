@@ -78,6 +78,12 @@ namespace Scalp.Brains
 
 		private string FigureOutPrintResult(string printArgument)
 		{
+			if (_variables.VariableExists(printArgument, _types.GetType("String")))
+			{
+				return StringOperations.TrimQuotes(
+					_variables.GetVariable(printArgument).PrimitiveValue as string);
+			}
+
 			string printResult;
 			if (printArgument.StartsWith('"'))
 			{
@@ -87,7 +93,7 @@ namespace Scalp.Brains
 				}
 				else // it's a normal string literal
 				{
-					printResult = StringOperations.RemoveStringQuotes(printArgument);
+					printResult = StringOperations.TrimQuotes(printArgument);
 				}
 			}
 			else
