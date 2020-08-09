@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using Scalp.Utility;
+using Scalp.ProgramState;
 
 namespace Scalp.Brains
 {
@@ -15,6 +16,13 @@ namespace Scalp.Brains
 		public bool MessageFlag { get; private set; }
 
 		public string Message { get; private set; }
+
+		private FullProgramState _programState;
+
+		public Brains(FullProgramState programState)
+		{
+			_programState = programState;
+		}
 
 		public void ReactAt(string input)
 		{

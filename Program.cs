@@ -6,7 +6,8 @@ namespace Scalp
 	{
 		static void Main(string[] args)
 		{
-			var brains = new Brains.Brains();
+			var state = new ProgramState.FullProgramState();
+			var brains = new Brains.Brains(state);
 
 			Console.WriteLine("Scalp");
 			Console.WriteLine("Visit https://github.com/Expurple/Scalp for more info.");
