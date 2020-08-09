@@ -18,17 +18,22 @@ namespace Scalp.Brains
 
 		public string Message { get; private set; }
 
+		private Tokenizer _tokenizer;
 		private FullProgramState _programState;
 
 		public Brains(FullProgramState programState)
 		{
 			_programState = programState;
+			_tokenizer = new Tokenizer();
 		}
 
 		public void ReactAt(string input)
 		{
+			var tokens = _tokenizer.Tokenize(input);
+
 			// Language has no functions yet, so we treat exit() as a special case
-			if (input == "exit()")
+			if (tokens.Count >= 3 && tokens[0] == "exit" &&
+				tokens[1] == "(" && tokens[2] == ")")
 			{
 				ExitFlag = true;
 			}
