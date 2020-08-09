@@ -27,10 +27,10 @@ namespace Scalp
 					// Cause ">>> " must be on the new line every time
 				}
 
-				if (brains.MessageFlag)
+				if (brains.PrintFlag)
 				{
-					Console.Write(brains.Message);
-					Console.Write(brains.Message.EndsWith('\n') ? "" : "\n");
+					Console.Write(brains.PrintContents);
+					Console.Write(brains.PrintContents.EndsWith('\n') ? "" : "\n");
 					// Cause ">>> " must be on the new line every time
 				}
 				if (brains.ExitFlag)

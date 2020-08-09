@@ -15,9 +15,9 @@ namespace Scalp.Brains
 	class Brains
 	{
 		public bool ExitFlag { get; private set; }
-		public bool MessageFlag { get; private set; }
+		public bool PrintFlag { get; private set; }
 
-		public string Message { get; private set; }
+		public string PrintContents { get; private set; }
 
 		private readonly Tokenizer _tokenizer;
 
@@ -55,17 +55,17 @@ namespace Scalp.Brains
 				tokens[1] == "(" && tokens[3] == ")")
 			{
 				string printArgument = tokens[2];
-				Message = GetStringRvalue(printArgument);
-				if (Message == null)
+				PrintContents = GetStringRvalue(printArgument);
+				if (PrintContents == null)
 				{
-					Message = "null";
+					PrintContents = "null";
 				}
-				MessageFlag = true;
+				PrintFlag = true;
 				return;
 			}
 			else
 			{
-				MessageFlag = false;
+				PrintFlag = false;
 			}
 
 			// As for it is now, string definition is a special case
