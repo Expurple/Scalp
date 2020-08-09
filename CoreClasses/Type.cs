@@ -8,5 +8,11 @@ namespace Scalp.CoreClasses
 	{
 		public readonly string TypeName;
 		public Object PrimitiveValue { get; set; }
+
+		Type(string TypeName, Object PrimitiveValue)
+		{
+			this.TypeName = TypeName;
+			this.PrimitiveValue = PrimitiveValue;
+		}
 	}
 }
