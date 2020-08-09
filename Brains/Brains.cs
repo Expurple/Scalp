@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using Scalp.Utility;
+
 namespace Scalp.Brains
 {
 	// A top level entity, responsible for the whole process of
@@ -50,7 +52,7 @@ namespace Scalp.Brains
 				}
 				else // it's a normal string literal
 				{
-					printResult = printArgument[1..^1];
+					printResult = StringOperations.RemoveStringQuotes(printArgument);
 				}
 			}
 			else
