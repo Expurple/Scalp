@@ -20,6 +20,10 @@ namespace Scalp
 				if (brains.MessageFlag)
 				{
 					Console.Write(brains.Message);
+					if (!brains.Message.EndsWith('\n'))
+					{
+						Console.Write('\n');
+					}
 				}
 				if (brains.ExitFlag)
 				{

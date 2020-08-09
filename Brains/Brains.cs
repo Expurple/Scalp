@@ -36,6 +36,11 @@ namespace Scalp.Brains
 		{
 			var tokens = _tokenizer.Tokenize(input);
 
+			if (tokens.Count == 0)
+			{
+				return; // Ignore empty lines
+			}
+
 			// Language has no functions yet, so we treat exit() as a special case
 			if (tokens.Count >= 3 && tokens[0] == "exit" &&
 				tokens[1] == "(" && tokens[2] == ")")
@@ -50,9 +55,9 @@ namespace Scalp.Brains
 			{
 				string printArgument = tokens[2];
 				Message = GetStringFromVariableOrLiteral(printArgument);
-				if (! Message.EndsWith('\n'))
+				if (Message == null)
 				{
-					Message += '\n';
+					Message = "null";
 				}
 				MessageFlag = true;
 				return;
@@ -63,7 +68,7 @@ namespace Scalp.Brains
 			}
 
 			// As for it is now, string definition is a special case
-			if (tokens[0] == "String")
+			if (tokens[0] == "String" && tokens.Count > 1)
 			{
 				ReactAtStringDefinition(tokens);
 				return;
@@ -77,6 +82,9 @@ namespace Scalp.Brains
 									GetStringFromVariableOrLiteral(tokens[2]);
 				return;
 			}
+
+			Message = "Error: the grammar of this line is incorrect. What did you mean by that?";
+			MessageFlag = true;
 		}
 
 		private void ReactAtStringDefinition(List<string> tokens)
