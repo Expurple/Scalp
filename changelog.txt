@@ -1,0 +1,18 @@
+﻿== v0.1.0 ==
+9 Aug 2020
+
+* This is the first ever version of Scalp.
+
+* It introduces an interactive Python-like interpreter, which supports:
+
+* A type system (in which only String is present and user types can't be declared yet)
+
+* Global variables, which can be assigned to a string literal or to another variable
+
+* Functions aren't yet supported, but there is:
+
+* A fake print() function which prints one string: a variable or a literal
+
+* A fake exit() function which shuts down the interpreter
+
+* And, sure, there are syntactical error checks.
