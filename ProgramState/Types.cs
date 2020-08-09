@@ -24,7 +24,7 @@ namespace Scalp.ProgramState
 		{
 			if (TypeExists(type.TypeName) && type != GetType(type.TypeName))
 			{
-				throw new TypeLoadException($"Error: refinition of type {type.TypeName}!");
+				throw new TypeLoadException($"Error: redefinition of type {type.TypeName}!");
 			}
 			else
 			{
