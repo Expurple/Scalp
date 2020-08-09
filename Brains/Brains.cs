@@ -4,6 +4,7 @@ using System.Text;
 
 using Scalp.Utility;
 using Scalp.ProgramState;
+using Scalp.CoreClasses;
 
 namespace Scalp.Brains
 {
@@ -47,6 +48,21 @@ namespace Scalp.Brains
 			{
 				MessageFlag = false;
 			}
+
+			if (input.StartsWith("String "))
+			{
+				ReactAtStringDefinition(input[7..]);
+			}
+		}
+
+		private void ReactAtStringDefinition(string assignment)
+		{
+			assignment = StringOperations.RemoveExtraSpacesFromExpression(assignment);
+			var variableAndValue = assignment.Split('=');
+			var newVariable = new ScalpVariable(variableAndValue[0],
+											_programState.Types.GetType("String"));
+			_programState.Variables.AddVariable(newVariable);
+			newVariable.PrimitiveValue = variableAndValue[1];
 		}
 
 		private string FigureOutPrintResult(string printArgument)
