@@ -48,7 +48,7 @@ namespace Scalp.Brains
 				tokens[1] == "(" && tokens[3] == ")")
 			{
 				string printArgument = tokens[2];
-				Message = FigureOutPrintResult(printArgument);
+				Message = GetStringFromVariableOrLiteral(printArgument);
 				if (! Message.EndsWith('\n'))
 				{
 					Message += '\n';
@@ -70,15 +70,14 @@ namespace Scalp.Brains
 		{
 			var newVariable = new ScalpVariable(tokens[1], _types.GetType("String"));
 			_variables.AddVariable(newVariable);
-			newVariable.PrimitiveValue = tokens[3];
+			newVariable.PrimitiveValue = GetStringFromVariableOrLiteral(tokens[3]);
 		}
 
-		private string FigureOutPrintResult(string printArgument)
+		private string GetStringFromVariableOrLiteral(string printArgument)
 		{
 			if (_variables.VariableExists(printArgument, _types.GetType("String")))
 			{
-				return StringOperations.TrimQuotes(
-					_variables.GetVariable(printArgument).PrimitiveValue as string);
+				return _variables.GetVariable(printArgument).PrimitiveValue as string;
 			}
 			else if (_variables.VariableExists(printArgument))
 			{
