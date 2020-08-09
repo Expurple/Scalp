@@ -42,13 +42,13 @@ namespace Scalp.Brains
 		private string FigureOutPrintResult(string printArgument)
 		{
 			string printResult;
-			if (printArgument.StartsWith('"') && printArgument.EndsWith('"'))
+			if (printArgument.StartsWith('"'))
 			{
-				if (printArgument == "\"")
+				if (printArgument == "\"" || ! printArgument.EndsWith('"'))
 				{
 					printResult = "Error! Expected string end (the closing \" is missing).";
 				}
-				else
+				else // it's a normal string literal
 				{
 					printResult = printArgument[1..^1];
 				}
