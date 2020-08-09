@@ -65,6 +65,14 @@ namespace Scalp.Brains
 			{
 				ReactAtStringDefinition(tokens);
 			}
+
+			// As for it is now, string assignment is a special case
+			if (_variables.VariableExists(tokens[0], _types.GetType("String")) &&
+				tokens.Count == 3 && tokens[1] == "=")
+			{
+				_variables.GetVariable(tokens[0]).PrimitiveValue =
+									GetStringFromVariableOrLiteral(tokens[2]);
+			}
 		}
 
 		private void ReactAtStringDefinition(List<string> tokens)
