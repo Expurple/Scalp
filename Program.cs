@@ -30,11 +30,8 @@ namespace Scalp
 				if (brains.MessageFlag)
 				{
 					Console.Write(brains.Message);
-					if (!brains.Message.EndsWith('\n'))
-					{
-						// Cause ">>> " must be on the new line every time
-						Console.Write('\n');
-					}
+					Console.Write(brains.Message.EndsWith('\n') ? "" : "\n");
+					// Cause ">>> " must be on the new line every time
 				}
 				if (brains.ExitFlag)
 				{
