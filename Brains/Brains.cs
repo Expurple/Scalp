@@ -92,7 +92,7 @@ namespace Scalp.Brains
 			if (!IsValidIdentifierName(tokens[1]))
 			{
 				throw new Exception($"Error! \"{tokens[1]}\" is an invalid identifier.\n" +
-							"Identifiers can only contain letters, digits, underscores and dashes\n" +
+							"Identifiers must only contain letters, digits, underscores and dashes\n" +
 							"and must not start with a digit.");
 			}
 
@@ -128,13 +128,13 @@ namespace Scalp.Brains
 			}
 			else
 			{
-				throw new Exception($"Error! \"{argument}\" is not a string literal nor a variable!");
+				throw new Exception($"Error! \"{argument}\" is neither a string literal nor a variable!");
 			}
 		}
 
 		private bool IsValidIdentifierName(string name)
 		{
-			return name.Any(ch => ('a' <= ch && ch <= 'z') ||
+			return name.All(ch => ('a' <= ch && ch <= 'z') ||
 								('A' <= ch && ch <= 'Z') ||
 								('0' <= ch && ch <= '9') ||
 								ch == '_' || ch == '-')
