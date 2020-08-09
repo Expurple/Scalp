@@ -60,7 +60,8 @@ namespace Scalp.Brains
 				MessageFlag = false;
 			}
 
-			if (input.StartsWith("String "))
+			// As for it is now, string definition is a special case
+			if (tokens[0] == "String")
 			{
 				ReactAtStringDefinition(tokens);
 			}
