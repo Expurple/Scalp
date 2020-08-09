@@ -9,12 +9,18 @@ namespace Scalp.Brains
 	// and probably returning something to print.
 	class Brains
 	{
+		public bool ExitFlag { get; private set; }
 		public bool MessageFlag { get; private set; }
+
 		public string Message { get; private set; }
 
 		public void ReactAt(string input)
 		{
-			// Can't do enything right now
+			// Language has no functions yet, so we treat it as a special case
+			if (input == "exit()")
+			{
+				ExitFlag = true;
+			}
 		}
 	}
 }

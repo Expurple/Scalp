@@ -14,14 +14,15 @@ namespace Scalp
 			{
 				Console.Write(">>> ");
 				string input = Console.ReadLine();
-				if (input == "exit()")
-				{
-					break;
-				}
 				brains.ReactAt(input);
+
 				if (brains.MessageFlag)
 				{
 					Console.Write(brains.Message);
+				}
+				if (brains.ExitFlag)
+				{
+					break;
 				}
 			}
 		}
