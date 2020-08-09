@@ -6,7 +6,17 @@ namespace Scalp
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			Console.WriteLine("Scalp");
+			Console.WriteLine("Visit https://github.com/Expurple/Scalp for more info.");
+			while (true)
+			{
+				Console.Write(">>> ");
+				string input = Console.ReadLine();
+				if (input == "exit()")
+				{
+					break;
+				}
+			}
 		}
 	}
 }
