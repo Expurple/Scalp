@@ -15,6 +15,14 @@ namespace Scalp.ProgramState
 			return _variables.ContainsKey(variableName);
 		}
 
+		public bool VariableExists(string variableName, ScalpType variableType)
+		{
+			var variableInMemory = GetVariable(variableName);
+			
+			return variableInMemory != null &&
+					variableInMemory.Type == variableType;
+		}
+
 		public ScalpVariable GetVariable(string variableName)
 		{
 			return VariableExists(variableName) ? _variables[variableName] : null;
