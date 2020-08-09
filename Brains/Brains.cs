@@ -98,7 +98,7 @@ namespace Scalp.Brains
 
 			else if (argument.StartsWith('"'))
 			{
-				if (argument == "\"" || ! argument.EndsWith('"'))
+				if (argument == "\"" || !argument.EndsWith('"'))
 				{
 					return "Error! Expected string end (the closing \" is missing).";
 				}
@@ -109,7 +109,7 @@ namespace Scalp.Brains
 			}
 			else
 			{
-				return "Error! " + argument + " is not a string literal!";
+				return $"Error! {argument} is not a string literal!";
 			}
 		}
 	}
