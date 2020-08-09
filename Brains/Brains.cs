@@ -9,9 +9,12 @@ namespace Scalp.Brains
 	// and probably returning something to print.
 	class Brains
 	{
-		public string ReactionAt(string input)
+		public bool MessageFlag { get; private set; }
+		public string Message { get; private set; }
+
+		public void ReactAt(string input)
 		{
-			return "";
+			// Can't do enything right now
 		}
 	}
 }

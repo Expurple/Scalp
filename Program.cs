@@ -18,7 +18,11 @@ namespace Scalp
 				{
 					break;
 				}
-				Console.Write(brains.ReactionAt(input));
+				brains.ReactAt(input);
+				if (brains.MessageFlag)
+				{
+					Console.Write(brains.Message);
+				}
 			}
 		}
 	}
