@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 using Scalp.Utility;
 using Scalp.ProgramState;
@@ -89,6 +90,15 @@ namespace Scalp.Brains
 
 		private void ReactAtStringDefinition(List<string> tokens)
 		{
+			if (!IsValidIdentifierName(tokens[1]))
+			{
+				Message = $"Error! {tokens[1]} is an invalid identifier.\n" +
+							"Identifiers can only contain letters, digits, underscores and dashes\n" +
+							"and must not start with a digit.";
+				MessageFlag = true;
+				return;
+			}
+
 			var newVariable = new ScalpVariable(tokens[1], _types.GetType("String"));
 			_variables.AddVariable(newVariable);
 			if (tokens.Count == 4 && tokens[2] == "=")
@@ -123,6 +133,16 @@ namespace Scalp.Brains
 			{
 				return $"Error! {argument} is not a string literal!";
 			}
+		}
+
+		private bool IsValidIdentifierName(string name)
+		{
+			return name.Any(ch => ('a' <= ch && ch <= 'z') ||
+								('A' <= ch && ch <= 'Z') ||
+								('0' <= ch && ch <= '9') ||
+								ch == '_' || ch == '-')
+				&&
+				!('0' <= name[0] && name[0] <= '9');
 		}
 	}
 }
