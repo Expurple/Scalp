@@ -17,7 +17,7 @@ Scalp is a basic statically typed C-like language, except for using new lines in
 
 ## Versioning
 
-I use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+I use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/Expurple/Scalp/tags). 
 
 ## Authors
 
