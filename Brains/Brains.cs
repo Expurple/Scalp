@@ -18,13 +18,18 @@ namespace Scalp.Brains
 
 		public string Message { get; private set; }
 
-		private Tokenizer _tokenizer;
-		private FullProgramState _state;
+		private readonly Tokenizer _tokenizer;
+
+		private readonly FullProgramState _state;
+		private readonly Types _types;
+		private readonly Variables _variables;
 
 		public Brains(FullProgramState programState)
 		{
-			_state = programState;
 			_tokenizer = new Tokenizer();
+			_state = programState;
+			_types = _state.Types;
+			_variables = _state.Variables;
 		}
 
 		public void ReactAt(string input)
@@ -66,8 +71,8 @@ namespace Scalp.Brains
 			assignment = StringOperations.RemoveExtraSpacesFromExpression(assignment);
 			var variableAndValue = assignment.Split('=');
 			var newVariable = new ScalpVariable(variableAndValue[0],
-											_state.Types.GetType("String"));
-			_state.Variables.AddVariable(newVariable);
+											_types.GetType("String"));
+			_variables.AddVariable(newVariable);
 			newVariable.PrimitiveValue = variableAndValue[1];
 		}
 
