@@ -84,15 +84,15 @@ namespace Scalp.Brains
 				return;
 			}
 
-			throw new Exception("Error: the grammar of this line is incorrect. What did you mean by that?");
+			throw new Exception("The grammar of this line is incorrect. What did you mean by that?");
 		}
 
 		private void ReactAtStringDefinition(List<string> tokens)
 		{
 			if (!IsValidIdentifierName(tokens[1]))
 			{
-				throw new Exception($"Error! \"{tokens[1]}\" is an invalid identifier.\n" +
-							"Identifiers must only contain letters, digits, underscores and dashes\n" +
+				throw new Exception($"\"{tokens[1]}\" is an invalid identifier.\n" +
+							"Identifiers must only contain letters, digits, underscores or dashes\n" +
 							"and must not start with a digit.");
 			}
 
@@ -112,14 +112,14 @@ namespace Scalp.Brains
 			}
 			else if (_variables.VariableExists(argument))
 			{
-				throw new Exception($"Error! Variable \"{argument}\" is not of type String.");
+				throw new Exception($"Variable \"{argument}\" is not of type String.");
 			}
 
 			else if (argument.StartsWith('"'))
 			{
 				if (argument == "\"" || !argument.EndsWith('"'))
 				{
-					throw new Exception("Error! Expected string end (the closing \" is missing).");
+					throw new Exception("Expected string end (the closing \" is missing).");
 				}
 				else // it's a normal string literal
 				{
@@ -128,7 +128,7 @@ namespace Scalp.Brains
 			}
 			else
 			{
-				throw new Exception($"Error! \"{argument}\" is neither a string literal nor a variable!");
+				throw new Exception($"\"{argument}\" is neither a string literal nor a variable!");
 			}
 		}
 
