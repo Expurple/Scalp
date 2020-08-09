@@ -19,11 +19,11 @@ namespace Scalp.Brains
 		public string Message { get; private set; }
 
 		private Tokenizer _tokenizer;
-		private FullProgramState _programState;
+		private FullProgramState _state;
 
 		public Brains(FullProgramState programState)
 		{
-			_programState = programState;
+			_state = programState;
 			_tokenizer = new Tokenizer();
 		}
 
@@ -66,8 +66,8 @@ namespace Scalp.Brains
 			assignment = StringOperations.RemoveExtraSpacesFromExpression(assignment);
 			var variableAndValue = assignment.Split('=');
 			var newVariable = new ScalpVariable(variableAndValue[0],
-											_programState.Types.GetType("String"));
-			_programState.Variables.AddVariable(newVariable);
+											_state.Types.GetType("String"));
+			_state.Variables.AddVariable(newVariable);
 			newVariable.PrimitiveValue = variableAndValue[1];
 		}
 
