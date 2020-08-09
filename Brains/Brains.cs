@@ -55,7 +55,7 @@ namespace Scalp.Brains
 				tokens[1] == "(" && tokens[3] == ")")
 			{
 				string printArgument = tokens[2];
-				Message = GetStringFromVariableOrLiteral(printArgument);
+				Message = GetStringRvalue(printArgument);
 				if (Message == null)
 				{
 					Message = "null";
@@ -80,7 +80,7 @@ namespace Scalp.Brains
 				tokens.Count == 3 && tokens[1] == "=")
 			{
 				_variables.GetVariable(tokens[0]).PrimitiveValue =
-									GetStringFromVariableOrLiteral(tokens[2]);
+									GetStringRvalue(tokens[2]);
 				return;
 			}
 
@@ -104,7 +104,7 @@ namespace Scalp.Brains
 			if (_variables.VariableExists(newVariable.Name, newVariable.Type)
 				&& tokens.Count == 4 && tokens[2] == "=")
 			{
-				newVariable.PrimitiveValue = GetStringFromVariableOrLiteral(tokens[3]);
+				newVariable.PrimitiveValue = GetStringRvalue(tokens[3]);
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace Scalp.Brains
 			}
 		}
 
-		private string GetStringFromVariableOrLiteral(string argument)
+		private string GetStringRvalue(string argument)
 		{
 			if (_variables.VariableExists(argument, _types.GetType("String")))
 			{
