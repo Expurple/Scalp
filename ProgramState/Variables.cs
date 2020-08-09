@@ -33,11 +33,11 @@ namespace Scalp.ProgramState
 		{
 			if (_types.TypeExists(variable.Name))
 			{
-				throw new Exception($"Error: name {variable.Name} is already registered as a type!");
+				throw new Exception($"Error: name \"{variable.Name}\" is already registered as a type!");
 			}
 			else if (VariableExists(variable.Name) && variable != GetVariable(variable.Name))
 			{
-				throw new Exception($"Error: redefinition of variable {variable.Name}!");
+				throw new Exception($"Error: redefinition of variable \"{variable.Name}\"!");
 			}
 			else
 			{

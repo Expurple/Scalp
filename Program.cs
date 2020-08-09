@@ -24,6 +24,7 @@ namespace Scalp
 				{
 					Console.Write(e.Message);
 					Console.Write(e.Message.EndsWith('\n') ? "" : "\n");
+					// Cause ">>> " must be on the new line every time
 				}
 
 				if (brains.MessageFlag)
@@ -31,6 +32,7 @@ namespace Scalp
 					Console.Write(brains.Message);
 					if (!brains.Message.EndsWith('\n'))
 					{
+						// Cause ">>> " must be on the new line every time
 						Console.Write('\n');
 					}
 				}

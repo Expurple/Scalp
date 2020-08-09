@@ -91,7 +91,7 @@ namespace Scalp.Brains
 		{
 			if (!IsValidIdentifierName(tokens[1]))
 			{
-				throw new Exception($"Error! {tokens[1]} is an invalid identifier.\n" +
+				throw new Exception($"Error! \"{tokens[1]}\" is an invalid identifier.\n" +
 							"Identifiers can only contain letters, digits, underscores and dashes\n" +
 							"and must not start with a digit.");
 			}
@@ -112,7 +112,7 @@ namespace Scalp.Brains
 			}
 			else if (_variables.VariableExists(argument))
 			{
-				throw new Exception($"Error! Variable {argument} is not of type String.");
+				throw new Exception($"Error! Variable \"{argument}\" is not of type String.");
 			}
 
 			else if (argument.StartsWith('"'))
@@ -128,7 +128,7 @@ namespace Scalp.Brains
 			}
 			else
 			{
-				throw new Exception($"Error! {argument} is not a string literal nor a variable!");
+				throw new Exception($"Error! \"{argument}\" is not a string literal nor a variable!");
 			}
 		}
 
