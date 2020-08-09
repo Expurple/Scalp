@@ -41,6 +41,7 @@ namespace Scalp.Brains
 				tokens[1] == "(" && tokens[2] == ")")
 			{
 				ExitFlag = true;
+				return;
 			}
 
 			// Language has no functions yet, so we treat print() as a special case
@@ -54,6 +55,7 @@ namespace Scalp.Brains
 					Message += '\n';
 				}
 				MessageFlag = true;
+				return;
 			}
 			else
 			{
@@ -64,6 +66,7 @@ namespace Scalp.Brains
 			if (tokens[0] == "String")
 			{
 				ReactAtStringDefinition(tokens);
+				return;
 			}
 
 			// As for it is now, string assignment is a special case
@@ -72,6 +75,7 @@ namespace Scalp.Brains
 			{
 				_variables.GetVariable(tokens[0]).PrimitiveValue =
 									GetStringFromVariableOrLiteral(tokens[2]);
+				return;
 			}
 		}
 
