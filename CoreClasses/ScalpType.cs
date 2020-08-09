@@ -7,12 +7,10 @@ namespace Scalp.CoreClasses
 	class ScalpType
 	{
 		public readonly string TypeName;
-		public Object PrimitiveValue { get; set; }
 
-		public ScalpType(string TypeName, Object PrimitiveValue)
+		public ScalpType(string TypeName)
 		{
 			this.TypeName = TypeName;
-			this.PrimitiveValue = PrimitiveValue;
 		}
 	}
 }

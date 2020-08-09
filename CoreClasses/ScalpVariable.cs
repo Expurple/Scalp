@@ -14,7 +14,7 @@ namespace Scalp.CoreClasses
 		{
 			Name = name;
 			Type = type;
-			PrimitiveValue = type.PrimitiveValue;
+			PrimitiveValue = null;
 		}
 	}
 }

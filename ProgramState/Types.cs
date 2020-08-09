@@ -37,7 +37,7 @@ namespace Scalp.ProgramState
 			_types = new Dictionary<string, ScalpType>();
 
 			// Filling in primitive system types:
-			AddType(new ScalpType("String", null));
+			AddType(new ScalpType("String"));
 		}
 	}
 }
