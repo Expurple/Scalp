@@ -35,6 +35,7 @@ namespace Scalp.Brains
 
 		public void ReactAt(string input)
 		{
+			PrintFlag = false;
 			var tokens = _tokenizer.Tokenize(input);
 
 			if (tokens.Count == 0)
@@ -62,10 +63,6 @@ namespace Scalp.Brains
 				}
 				PrintFlag = true;
 				return;
-			}
-			else
-			{
-				PrintFlag = false;
 			}
 
 			// As for it is now, string definition is a special case
