@@ -25,17 +25,39 @@ namespace Scalp.Brains
 			// Language has no functions yet, so we treat print() as a special case
 			if (input.StartsWith("print(") && input.EndsWith(')'))
 			{
-				MessageFlag = true;
-				Message = input[6..^1];
+				string printArgument = input[6..^1];
+				Message = FigureOutPrintResult(printArgument);
 				if (! Message.EndsWith('\n'))
 				{
 					Message += '\n';
 				}
+				MessageFlag = true;
 			}
 			else
 			{
 				MessageFlag = false;
 			}
+		}
+
+		private string FigureOutPrintResult(string printArgument)
+		{
+			string printResult;
+			if (printArgument.StartsWith('"') && printArgument.EndsWith('"'))
+			{
+				if (printArgument == "\"")
+				{
+					printResult = "Error! Expected string end (the closing \" is missing).";
+				}
+				else
+				{
+					printResult = printArgument[1..^1];
+				}
+			}
+			else
+			{
+				printResult = "Error! " + printArgument + " is not a string literal!";
+			}
+			return printResult;
 		}
 	}
 }
