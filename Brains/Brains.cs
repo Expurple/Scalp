@@ -99,11 +99,19 @@ namespace Scalp.Brains
 				return;
 			}
 
-			var newVariable = new ScalpVariable(tokens[1], _types.GetType("String"));
-			_variables.AddVariable(newVariable);
-			if (tokens.Count == 4 && tokens[2] == "=")
+			try
 			{
-				newVariable.PrimitiveValue = GetStringFromVariableOrLiteral(tokens[3]);
+				var newVariable = new ScalpVariable(tokens[1], _types.GetType("String"));
+				_variables.AddVariable(newVariable);
+				if (tokens.Count == 4 && tokens[2] == "=")
+				{
+					newVariable.PrimitiveValue = GetStringFromVariableOrLiteral(tokens[3]);
+				}
+			}
+			catch (Exception e) // Exceptions occure when redefining a cymbol
+			{
+				Message = e.Message;
+				MessageFlag = true;
 			}
 		}
 
