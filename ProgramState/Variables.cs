@@ -9,6 +9,7 @@ namespace Scalp.ProgramState
 	class Variables
 	{
 		private Dictionary<string, ScalpVariable> _variables;
+		private readonly Types _types;
 
 		public bool VariableExists(string variableName)
 		{
@@ -30,7 +31,11 @@ namespace Scalp.ProgramState
 
 		public void AddVariable(ScalpVariable variable)
 		{
-			if (VariableExists(variable.Name) && variable != GetVariable(variable.Name))
+			if (_types.TypeExists(variable.Name))
+			{
+				throw new Exception($"Error: name {variable.Name} is already registered as a type!");
+			}
+			else if (VariableExists(variable.Name) && variable != GetVariable(variable.Name))
 			{
 				throw new Exception($"Error: redefinition of variable {variable.Name}!");
 			}
@@ -40,9 +45,10 @@ namespace Scalp.ProgramState
 			}
 		}
 
-		public Variables()
+		public Variables(Types types)
 		{
 			_variables = new Dictionary<string, ScalpVariable>();
+			_types = types;
 		}
 	}
 }

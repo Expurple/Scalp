@@ -12,7 +12,7 @@ namespace Scalp.ProgramState
 		public FullProgramState()
 		{
 			Types = new Types();
-			Variables = new Variables();
+			Variables = new Variables(Types);
 		}
 	}
 }
