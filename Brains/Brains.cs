@@ -120,7 +120,6 @@ namespace Scalp.Brains
 				MessageFlag = true;
 			}
 		}
-
 		private string GetStringRvalue(string argument)
 		{
 			if (_variables.VariableExists(argument, _types.GetType("String")))
@@ -129,14 +128,14 @@ namespace Scalp.Brains
 			}
 			else if (_variables.VariableExists(argument))
 			{
-				return $"Error! Variable {argument} is not of type String.";
+				throw new Exception($"Error! Variable {argument} is not of type String.");
 			}
 
 			else if (argument.StartsWith('"'))
 			{
 				if (argument == "\"" || !argument.EndsWith('"'))
 				{
-					return "Error! Expected string end (the closing \" is missing).";
+					throw new Exception("Error! Expected string end (the closing \" is missing).");
 				}
 				else // it's a normal string literal
 				{
@@ -145,7 +144,7 @@ namespace Scalp.Brains
 			}
 			else
 			{
-				return $"Error! {argument} is not a string literal!";
+				throw new Exception($"Error! {argument} is not a string literal!");
 			}
 		}
 
