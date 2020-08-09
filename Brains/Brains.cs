@@ -83,6 +83,10 @@ namespace Scalp.Brains
 				return StringOperations.TrimQuotes(
 					_variables.GetVariable(printArgument).PrimitiveValue as string);
 			}
+			else if (_variables.VariableExists(printArgument))
+			{
+				return $"Error! Variable {printArgument} is not of type String.";
+			}
 
 			string printResult;
 			if (printArgument.StartsWith('"'))
