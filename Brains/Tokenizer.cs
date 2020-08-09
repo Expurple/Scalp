@@ -74,6 +74,7 @@ namespace Scalp.Brains
 		private string TokenizeStringLiteral(ref int i)
 		{
 			var literal = new StringBuilder("\"");
+			i++;
 			for (/*     */; i < _statement.Length; i++)
 			{
 				literal.Append(_statement[i]);

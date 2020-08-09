@@ -39,9 +39,10 @@ namespace Scalp.Brains
 			}
 
 			// Language has no functions yet, so we treat print() as a special case
-			if (input.StartsWith("print(") && input.EndsWith(')'))
+			if (tokens.Count >= 4 && tokens[0] == "print" &&
+				tokens[1] == "(" && tokens[3] == ")")
 			{
-				string printArgument = input[6..^1];
+				string printArgument = tokens[2];
 				Message = FigureOutPrintResult(printArgument);
 				if (! Message.EndsWith('\n'))
 				{
