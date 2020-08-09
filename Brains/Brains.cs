@@ -62,18 +62,15 @@ namespace Scalp.Brains
 
 			if (input.StartsWith("String "))
 			{
-				ReactAtStringDefinition(input[7..]);
+				ReactAtStringDefinition(tokens);
 			}
 		}
 
-		private void ReactAtStringDefinition(string assignment)
+		private void ReactAtStringDefinition(List<string> tokens)
 		{
-			assignment = StringOperations.RemoveExtraSpacesFromExpression(assignment);
-			var variableAndValue = assignment.Split('=');
-			var newVariable = new ScalpVariable(variableAndValue[0],
-											_types.GetType("String"));
+			var newVariable = new ScalpVariable(tokens[1], _types.GetType("String"));
 			_variables.AddVariable(newVariable);
-			newVariable.PrimitiveValue = variableAndValue[1];
+			newVariable.PrimitiveValue = tokens[3];
 		}
 
 		private string FigureOutPrintResult(string printArgument)
