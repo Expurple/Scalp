@@ -70,7 +70,10 @@ namespace Scalp.Brains
 		{
 			var newVariable = new ScalpVariable(tokens[1], _types.GetType("String"));
 			_variables.AddVariable(newVariable);
-			newVariable.PrimitiveValue = GetStringFromVariableOrLiteral(tokens[3]);
+			if (tokens.Count == 4 && tokens[2] == "=")
+			{
+				newVariable.PrimitiveValue = GetStringFromVariableOrLiteral(tokens[3]);
+			}
 		}
 
 		private string GetStringFromVariableOrLiteral(string printArgument)
