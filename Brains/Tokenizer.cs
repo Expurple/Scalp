@@ -67,7 +67,7 @@ namespace Scalp.Brains
 			}
 			else
 			{
-				throw new ArgumentException("invalid char literal!");
+				throw new ArgumentException("Invalid char literal!");
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace Scalp.Brains
 					return literal.ToString();
 				}
 			}
-			throw new ArgumentException("Expected string literal end (the closing \" is missing).");
+			throw new ArgumentException($"Expected \" at the end of line to close the opened string literal \'{literal.ToString()}\'.");
 		}
 	}
 }
