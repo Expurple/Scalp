@@ -17,7 +17,14 @@ namespace Scalp.ProgramState
 
 		public ScalpType GetType(string typeName)
 		{
-			return TypeExists(typeName) ? _types[typeName] : null;
+			if (TypeExists(typeName))
+			{
+				return _types[typeName];
+			}
+			else
+			{
+				throw new ArgumentException($"Type {typeName} not found.");
+			}
 		}
 
 		public void AddType(ScalpType type)

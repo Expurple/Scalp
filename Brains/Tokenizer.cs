@@ -13,7 +13,7 @@ namespace Scalp.Brains
 
 		private string _statement;
 		private List<ScalpToken> _tokens;
-		private ScalpToken _token; // Could've been a StringBuilder, but it's more readable like this.
+		private ScalpToken _token;
 
 		public List<ScalpToken> Tokenize(string statement)
 		{
