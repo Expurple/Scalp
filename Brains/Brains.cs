@@ -108,23 +108,26 @@ namespace Scalp.Brains
 
 		private ScalpVariable GetRvalue(string expectedType, ScalpToken token)
 		{
-			if (token.kind == ScalpToken.Kind.StringLiteral)
+			// Creating a tempopary string from a literal is a type-specific case
+			if (expectedType == "String" && token.kind == ScalpToken.Kind.StringLiteral)
 			{
 				var stringFromLiteral = new ScalpVariable("", _types.GetType("String"));
 				stringFromLiteral.PrimitiveValue = StringOperations.TrimQuotes(token.value);
 				return stringFromLiteral;
 			}
-			else if (_variables.VariableExists(token.value, _types.GetType("String")))
+
+			else if (_variables.VariableExists(token.value, _types.GetType(expectedType)))
 			{
 				return _variables.GetVariable(token.value);
 			}
 			else if (_variables.VariableExists(token.value))
 			{
-				throw new Exception($"Variable \"{token.value}\" is not of type String.");
+				throw new Exception($" Whong type of variable \"{token.value}\".\n" +
+					$"Expected: \"{expectedType}\", got: \"{_variables.GetVariable(token.value).Type.TypeName}\".");
 			}
 			else if (_types.TypeExists(token.value))
 			{
-				throw new Exception($"Expected a string instance instead of typename \"{token.value}\".");
+				throw new Exception($"Expected a {expectedType} instance instead of typename \"{token.value}\".");
 			}
 			else
 			{
