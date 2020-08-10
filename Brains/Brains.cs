@@ -44,7 +44,7 @@ namespace Scalp.Brains
 			}
 
 			// Language has no functions yet, so we treat exit() as a special case
-			if (tokens.Count >= 3 && tokens[0].value == "exit" &&
+			if (tokens.Count == 3 && tokens[0].value == "exit" &&
 				tokens[1].value == "(" && tokens[2].value == ")")
 			{
 				ExitFlag = true;
@@ -52,7 +52,7 @@ namespace Scalp.Brains
 			}
 
 			// Language has no functions yet, so we treat print() as a special case
-			if (tokens.Count >= 4 && tokens[0].value == "print" &&
+			if (tokens.Count == 4 && tokens[0].value == "print" &&
 				tokens[1].value == "(" && tokens[3].value == ")")
 			{
 				PrintContents = GetStringRvalue(tokens[2]);
@@ -65,7 +65,7 @@ namespace Scalp.Brains
 			}
 
 			// As for it is now, string definition is a special case
-			if (tokens[0].value == "String" && tokens.Count > 1)
+			if (tokens[0].value == "String" && tokens.Count == 4)
 			{
 				ReactAtStringDefinition(tokens);
 				return;
