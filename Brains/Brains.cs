@@ -135,9 +135,9 @@ namespace Scalp.Brains
 		{
 			if (!IsValidIdentifierName(_tokens[1].value))
 			{
-				throw new Exception($"\"{_tokens[1]}\" is an invalid identifier.\n" +
+				throw new Exception($"\"{_tokens[1].value}\" is an invalid identifier.\n" +
 							"Identifiers must only contain letters, digits, underscores or dashes\n" +
-							"and must not start with a digit.");
+							"must not be a Scalp keyword and must not start with a digit.");
 			}
 
 			var newVariable = new ScalpVariable(_tokens[1].value,
@@ -211,7 +211,9 @@ namespace Scalp.Brains
 								('0' <= ch && ch <= '9') ||
 								ch == '_' || ch == '-')
 				&&
-				!('0' <= name[0] && name[0] <= '9');
+				!('0' <= name[0] && name[0] <= '9')
+				&&
+				!Tokenizer.KEYWORDS.Contains(name);
 		}
 	}
 }
