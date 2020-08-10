@@ -68,7 +68,7 @@ namespace Scalp.Brains
 			// As for it is now, string definition is a special case
 			if (_tokens[0].value == "String" && _tokens.Count == 4)
 			{
-				ReactAtStringDefinition();
+				ReactAtVariableDeclaration();
 				return;
 			}
 
@@ -84,7 +84,7 @@ namespace Scalp.Brains
 			throw new Exception("The grammar of this line is incorrect. What did you mean by that?");
 		}
 
-		private void ReactAtStringDefinition()
+		private void ReactAtVariableDeclaration()
 		{
 			if (!IsValidIdentifierName(_tokens[1].value))
 			{
@@ -93,8 +93,10 @@ namespace Scalp.Brains
 							"and must not start with a digit.");
 			}
 
-			var newVariable = new ScalpVariable(_tokens[1].value, _types.GetType("String"));
-			_variables.AddVariable(newVariable); // throws redefinition exceptions
+			var newVariable = new ScalpVariable(_tokens[1].value,
+												_types.GetType(_tokens[0].value));
+			_variables.AddVariable(newVariable);
+
 			if (_tokens.Count == 4 && _tokens[2].value == "=")
 			{
 				newVariable.PrimitiveValue = GetStringRvalue(_tokens[3]);
