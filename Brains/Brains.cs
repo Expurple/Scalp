@@ -88,6 +88,25 @@ namespace Scalp.Brains
 				
 			}
 
+			// if statement
+			if (_tokens[0].value == "if")
+			{
+				if (_tokens.Count == 1)
+				{
+					throw new Exception("Expected a condition after an \"if\" statement.");
+				}
+
+				ScalpVariable condition = GetRvalue("Bool", _tokens[1]);
+
+				if (_tokens.Count > 2)
+				{
+					throw new Exception($"The line is too long.\n" +
+						$"Expected new line after the condition (\"{_tokens[1].value}\").");
+				}
+
+				return;
+			}
+
 			throw new Exception("The grammar of this line is incorrect. What did you mean by that?");
 		}
 
@@ -156,7 +175,7 @@ namespace Scalp.Brains
 			}
 			else if (_variables.VariableExists(token.value))
 			{
-				throw new Exception($" Whong type of variable \"{token.value}\".\n" +
+				throw new Exception($" Wrong type of variable \"{token.value}\".\n" +
 					$"Expected: \"{expectedType}\", got: \"{_variables.GetVariable(token.value).Type.TypeName}\".");
 			}
 			else if (_types.TypeExists(token.value))

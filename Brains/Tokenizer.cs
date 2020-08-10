@@ -12,6 +12,8 @@ namespace Scalp.Brains
 			{ '=', '(', ')' };
 		public readonly List<string> BOOL_LITERALS = new List<string>
 			{ "true", "false" };
+		public readonly List<string> KEYWORDS = new List<string>
+			{ "if" };
 
 		private string _statement;
 		private List<ScalpToken> _tokens;
@@ -49,7 +51,12 @@ namespace Scalp.Brains
 				{
 					_token.value += _statement[i];
 
-					if (BOOL_LITERALS.Contains(_token.value))
+					if (KEYWORDS.Contains(_token.value))
+					{
+						_token.kind = ScalpToken.Kind.Keyword;
+						SaveActiveToken();
+					}
+					else if (BOOL_LITERALS.Contains(_token.value))
 					{
 						_token.kind = ScalpToken.Kind.BoolLiteral;
 						SaveActiveToken();
