@@ -4,6 +4,8 @@ An interpreter for my own simple scripting language, which I develop for fun and
 
 Scalp is a basic statically typed C-like language, except for using new lines instead of semicolons, such as in Python.
 
+To know more about language and interpreter features, visit project [wiki](https://github.com/Expurple/Scalp/wiki).
+
 ## What's new in v0.2.0 (11 Aug 2020)?
 
 * Added *Bool* variables and literals
