@@ -56,12 +56,7 @@ namespace Scalp.Brains
 			if (_tokens.Count == 4 && _tokens[0].value == "print" &&
 				_tokens[1].value == "(" && _tokens[3].value == ")")
 			{
-				var stringToPrint = GetRvalue("String", _tokens[2]);
-				PrintContents = stringToPrint.PrimitiveValue as string;
-				if (PrintContents == null)
-				{
-					PrintContents = "null";
-				}
+				PrintContents = TryGetPrintContents();
 				PrintFlag = true;
 				return;
 			}
@@ -90,6 +85,17 @@ namespace Scalp.Brains
 			}
 
 			throw new Exception("The grammar of this line is incorrect. What did you mean by that?");
+		}
+
+		private string TryGetPrintContents()
+		{
+			var stringToPrint = GetRvalue("String", _tokens[2]);
+			PrintContents = stringToPrint.PrimitiveValue as string;
+			if (PrintContents == null)
+			{
+				PrintContents = "null";
+			}
+			return PrintContents;
 		}
 
 		private void ReactAtVariableDeclaration()
