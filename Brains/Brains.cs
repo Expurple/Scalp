@@ -16,7 +16,7 @@ namespace Scalp.Brains
 	{
 		public bool ExitFlag { get; private set; }
 		public bool PrintFlag { get; private set; }
-		private bool _ignoreLineFlag;
+		private bool _ignoreLineFlag = false;
 
 		public string PrintContents { get; private set; }
 
@@ -38,9 +38,14 @@ namespace Scalp.Brains
 		public void ReactAt(string input)
 		{
 			if (_ignoreLineFlag)
+			{
+				if (input.TrimStart(' ').TrimStart('\t').StartsWith("endif"))
+				{
+					_ignoreLineFlag = false;
+				}
 				return;
+			}
 
-			_ignoreLineFlag = false;
 			PrintFlag = false;
 			_tokens = _tokenizer.Tokenize(input);
 			ReactAtTokens();
