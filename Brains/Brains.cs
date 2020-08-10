@@ -95,12 +95,13 @@ namespace Scalp.Brains
 
 			var newVariable = new ScalpVariable(_tokens[1].value,
 												_types.GetType(_tokens[0].value));
-			_variables.AddVariable(newVariable);
 
 			if (_tokens.Count == 4 && _tokens[2].value == "=")
 			{
 				newVariable.PrimitiveValue = GetRvalue(newVariable.Type.TypeName, _tokens[3]);
 			}
+
+			_variables.AddVariable(newVariable);
 		}
 
 		private string GetRvalue(string expectedType, ScalpToken token)
