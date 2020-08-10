@@ -89,6 +89,16 @@ namespace Scalp.Brains
 
 		private string TryGetPrintContents()
 		{
+			// An "overload" for Bool
+			try
+			{
+				var boolToPrint = GetRvalue("Bool", _tokens[2]);
+				return boolToPrint.PrimitiveValue == null ? "null" :
+					((bool)boolToPrint.PrimitiveValue == true ? "true" : "false");
+			}
+			catch { }
+
+			// An "overload" for String
 			var stringToPrint = GetRvalue("String", _tokens[2]);
 			PrintContents = stringToPrint.PrimitiveValue as string;
 			if (PrintContents == null)
