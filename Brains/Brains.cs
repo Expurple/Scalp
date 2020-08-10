@@ -66,7 +66,7 @@ namespace Scalp.Brains
 			}
 
 			// As for it is now, string definition is a special case
-			if (_tokens[0].value == "String" && _tokens.Count == 4)
+			if (_tokens[0].value == "String" && (_tokens.Count == 2 || _tokens.Count == 4))
 			{
 				ReactAtVariableDeclaration();
 				return;
