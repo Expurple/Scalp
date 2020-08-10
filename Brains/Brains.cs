@@ -38,7 +38,11 @@ namespace Scalp.Brains
 		{
 			PrintFlag = false;
 			_tokens = _tokenizer.Tokenize(input);
+			ReactAtTokens();
+		}
 
+		private void ReactAtTokens()
+		{
 			if (_tokens.Count == 0)
 			{
 				return; // Ignore empty lines
