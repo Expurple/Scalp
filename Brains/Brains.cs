@@ -112,16 +112,9 @@ namespace Scalp.Brains
 				throw new Exception($"Variable \"{argument}\" is not of type String.");
 			}
 
-			else if (argument.StartsWith('"'))
+			else if (argument.StartsWith('"')) // it's a string literal
 			{
-				if (argument == "\"" || !argument.EndsWith('"'))
-				{
-					throw new Exception("Expected string end (the closing \" is missing).");
-				}
-				else // it's a normal string literal
-				{
-					return StringOperations.TrimQuotes(argument);
-				}
+				return StringOperations.TrimQuotes(argument);
 			}
 			else
 			{
