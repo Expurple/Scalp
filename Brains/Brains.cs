@@ -66,20 +66,27 @@ namespace Scalp.Brains
 				return;
 			}
 
-			// As for it is now, string definition is a special case
-			if (_tokens[0].value == "String" && (_tokens.Count == 2 || _tokens.Count == 4))
+			if (_types.TypeExists(_tokens[0].value) && (_tokens.Count == 2 || _tokens.Count == 4))
 			{
 				ReactAtVariableDeclaration();
 				return;
 			}
 
-			// As for it is now, string assignment is a special case
-			if (_variables.VariableExists(_tokens[0].value, _types.GetType("String")) &&
-				_tokens.Count == 3 && _tokens[1].value == "=")
+			// assign value to an existing variable
+			if (_tokens.Count == 3 && _tokens[1].value == "=")
 			{
-				_variables.GetVariable(_tokens[0].value).CopyValueFrom(
-							GetRvalue("String", _tokens[2]));
-				return;
+				if (_variables.VariableExists(_tokens[0].value))
+				{
+					var modifiableVariable = _variables.GetVariable(_tokens[0].value);
+					modifiableVariable.CopyValueFrom(
+							GetRvalue(modifiableVariable.Type.TypeName, _tokens[2]));
+					return;
+				}
+				else
+				{
+					throw new Exception($"Unknown identifier \"{_tokens[0].value}\".");
+				}
+				
 			}
 
 			throw new Exception("The grammar of this line is incorrect. What did you mean by that?");
