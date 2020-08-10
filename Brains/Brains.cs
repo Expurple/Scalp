@@ -20,6 +20,7 @@ namespace Scalp.Brains
 		public string PrintContents { get; private set; }
 
 		private readonly Tokenizer _tokenizer;
+		private List<ScalpToken> _tokens;
 
 		private readonly FullProgramState _state;
 		private readonly Types _types;
@@ -36,26 +37,26 @@ namespace Scalp.Brains
 		public void ReactAt(string input)
 		{
 			PrintFlag = false;
-			var tokens = _tokenizer.Tokenize(input);
+			_tokens = _tokenizer.Tokenize(input);
 
-			if (tokens.Count == 0)
+			if (_tokens.Count == 0)
 			{
 				return; // Ignore empty lines
 			}
 
 			// Language has no functions yet, so we treat exit() as a special case
-			if (tokens.Count == 3 && tokens[0].value == "exit" &&
-				tokens[1].value == "(" && tokens[2].value == ")")
+			if (_tokens.Count == 3 && _tokens[0].value == "exit" &&
+				_tokens[1].value == "(" && _tokens[2].value == ")")
 			{
 				ExitFlag = true;
 				return;
 			}
 
 			// Language has no functions yet, so we treat print() as a special case
-			if (tokens.Count == 4 && tokens[0].value == "print" &&
-				tokens[1].value == "(" && tokens[3].value == ")")
+			if (_tokens.Count == 4 && _tokens[0].value == "print" &&
+				_tokens[1].value == "(" && _tokens[3].value == ")")
 			{
-				PrintContents = GetStringRvalue(tokens[2]);
+				PrintContents = GetStringRvalue(_tokens[2]);
 				if (PrintContents == null)
 				{
 					PrintContents = "null";
@@ -65,38 +66,38 @@ namespace Scalp.Brains
 			}
 
 			// As for it is now, string definition is a special case
-			if (tokens[0].value == "String" && tokens.Count == 4)
+			if (_tokens[0].value == "String" && _tokens.Count == 4)
 			{
-				ReactAtStringDefinition(tokens);
+				ReactAtStringDefinition();
 				return;
 			}
 
 			// As for it is now, string assignment is a special case
-			if (_variables.VariableExists(tokens[0].value, _types.GetType("String")) &&
-				tokens.Count == 3 && tokens[1].value == "=")
+			if (_variables.VariableExists(_tokens[0].value, _types.GetType("String")) &&
+				_tokens.Count == 3 && _tokens[1].value == "=")
 			{
-				_variables.GetVariable(tokens[0].value).PrimitiveValue =
-									GetStringRvalue(tokens[2]);
+				_variables.GetVariable(_tokens[0].value).PrimitiveValue =
+									GetStringRvalue(_tokens[2]);
 				return;
 			}
 
 			throw new Exception("The grammar of this line is incorrect. What did you mean by that?");
 		}
 
-		private void ReactAtStringDefinition(List<ScalpToken> tokens)
+		private void ReactAtStringDefinition()
 		{
-			if (!IsValidIdentifierName(tokens[1].value))
+			if (!IsValidIdentifierName(_tokens[1].value))
 			{
-				throw new Exception($"\"{tokens[1]}\" is an invalid identifier.\n" +
+				throw new Exception($"\"{_tokens[1]}\" is an invalid identifier.\n" +
 							"Identifiers must only contain letters, digits, underscores or dashes\n" +
 							"and must not start with a digit.");
 			}
 
-			var newVariable = new ScalpVariable(tokens[1].value, _types.GetType("String"));
+			var newVariable = new ScalpVariable(_tokens[1].value, _types.GetType("String"));
 			_variables.AddVariable(newVariable); // throws redefinition exceptions
-			if (tokens.Count == 4 && tokens[2].value == "=")
+			if (_tokens.Count == 4 && _tokens[2].value == "=")
 			{
-				newVariable.PrimitiveValue = GetStringRvalue(tokens[3]);
+				newVariable.PrimitiveValue = GetStringRvalue(_tokens[3]);
 			}
 		}
 
