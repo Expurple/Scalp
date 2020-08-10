@@ -56,7 +56,7 @@ namespace Scalp.Brains
 			if (_tokens.Count == 4 && _tokens[0].value == "print" &&
 				_tokens[1].value == "(" && _tokens[3].value == ")")
 			{
-				PrintContents = GetStringRvalue(_tokens[2]);
+				PrintContents = GetRvalue("String", _tokens[2]);
 				if (PrintContents == null)
 				{
 					PrintContents = "null";
@@ -77,7 +77,7 @@ namespace Scalp.Brains
 				_tokens.Count == 3 && _tokens[1].value == "=")
 			{
 				_variables.GetVariable(_tokens[0].value).PrimitiveValue =
-									GetStringRvalue(_tokens[2]);
+									GetRvalue("String", _tokens[2]);
 				return;
 			}
 
@@ -99,11 +99,11 @@ namespace Scalp.Brains
 
 			if (_tokens.Count == 4 && _tokens[2].value == "=")
 			{
-				newVariable.PrimitiveValue = GetStringRvalue(_tokens[3]);
+				newVariable.PrimitiveValue = GetRvalue(newVariable.Type.TypeName, _tokens[3]);
 			}
 		}
 
-		private string GetStringRvalue(ScalpToken token)
+		private string GetRvalue(string expectedType, ScalpToken token)
 		{
 			if (token.kind == ScalpToken.Kind.StringLiteral)
 			{
