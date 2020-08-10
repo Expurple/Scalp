@@ -77,8 +77,8 @@ namespace Scalp.Brains
 			if (_variables.VariableExists(_tokens[0].value, _types.GetType("String")) &&
 				_tokens.Count == 3 && _tokens[1].value == "=")
 			{
-				_variables.GetVariable(_tokens[0].value).PrimitiveValue = 
-							GetRvalue("String", _tokens[2]).PrimitiveValue;
+				_variables.GetVariable(_tokens[0].value).CopyValueFrom(
+							GetRvalue("String", _tokens[2]));
 				return;
 			}
 
@@ -99,8 +99,8 @@ namespace Scalp.Brains
 
 			if (_tokens.Count == 4 && _tokens[2].value == "=")
 			{
-				newVariable.PrimitiveValue =
-					GetRvalue(newVariable.Type.TypeName, _tokens[3]).PrimitiveValue;
+				newVariable.CopyValueFrom(
+						GetRvalue(newVariable.Type.TypeName, _tokens[3]));
 			}
 
 			_variables.AddVariable(newVariable);
