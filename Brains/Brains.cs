@@ -182,6 +182,22 @@ namespace Scalp.Brains
 			{
 				throw new Exception($"Expected a {expectedType} instance instead of typename \"{token.value}\".");
 			}
+			else if (token.kind == ScalpToken.Kind.StringLiteral)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a String literal.");
+			}
+			else if (token.kind == ScalpToken.Kind.CharLiteral)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a Char literal.");
+			}
+			else if (token.kind == ScalpToken.Kind.BoolLiteral)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a Bool literal.");
+			}
+			else if (token.kind == ScalpToken.Kind.Keyword)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a keyword \"{token.value}\".");
+			}
 			else
 			{
 				throw new Exception($"Unknown identifier \"{token.value}\".");
