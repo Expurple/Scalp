@@ -4,16 +4,16 @@ An interpreter for my own simple scripting language, which I develop for fun and
 
 Scalp is a basic statically typed C-like language, except for using new lines instead of semicolons, such as in Python.
 
-## What's new in v0.1.0 (9 Aug 2020)?
+To know more about language and interpreter features, visit project [wiki](https://github.com/Expurple/Scalp/wiki).
 
-* This is the first ever version of Scalp.
-* It introduces an interactive Python-like interpreter, which supports:
-* A type system (in which only *String* is present and user types can't be declared yet)
-* Global variables, which can be assigned to a string literal or to another variable
-* Functions aren't yet supported, but there is:
-* A fake *print()* function which prints one string: a variable or a literal
-* A fake *exit()* function which shuts down the interpreter
-* And, sure, there are syntactical error checks.
+## What's new in v0.2.0 (11 Aug 2020)?
+
+* Added *Bool* variables and literals
+* These have no operators yet
+* Added *print()* support for Bool
+* Added a primitive *if* statement (*if* and *endif* keywords)
+* Added more detailed error messages
+* Tabs in the source code are now ignored
 
 ## Versioning
 

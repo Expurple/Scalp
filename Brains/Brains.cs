@@ -16,10 +16,12 @@ namespace Scalp.Brains
 	{
 		public bool ExitFlag { get; private set; }
 		public bool PrintFlag { get; private set; }
+		private bool _ignoreLineFlag = false;
 
 		public string PrintContents { get; private set; }
 
 		private readonly Tokenizer _tokenizer;
+		private List<ScalpToken> _tokens;
 
 		private readonly FullProgramState _state;
 		private readonly Types _types;
@@ -35,97 +37,185 @@ namespace Scalp.Brains
 
 		public void ReactAt(string input)
 		{
-			PrintFlag = false;
-			var tokens = _tokenizer.Tokenize(input);
+			if (_ignoreLineFlag)
+			{
+				if (input.TrimStart(' ').TrimStart('\t').StartsWith("endif"))
+				{
+					_ignoreLineFlag = false;
+				}
+				return;
+			}
 
-			if (tokens.Count == 0)
+			PrintFlag = false;
+			_tokens = _tokenizer.Tokenize(input);
+			ReactAtTokens();
+		}
+
+		private void ReactAtTokens()
+		{
+			if (_tokens.Count == 0)
 			{
 				return; // Ignore empty lines
 			}
 
 			// Language has no functions yet, so we treat exit() as a special case
-			if (tokens.Count >= 3 && tokens[0] == "exit" &&
-				tokens[1] == "(" && tokens[2] == ")")
+			if (_tokens.Count == 3 && _tokens[0].value == "exit" &&
+				_tokens[1].value == "(" && _tokens[2].value == ")")
 			{
 				ExitFlag = true;
 				return;
 			}
 
 			// Language has no functions yet, so we treat print() as a special case
-			if (tokens.Count >= 4 && tokens[0] == "print" &&
-				tokens[1] == "(" && tokens[3] == ")")
+			if (_tokens.Count == 4 && _tokens[0].value == "print" &&
+				_tokens[1].value == "(" && _tokens[3].value == ")")
 			{
-				string printArgument = tokens[2];
-				PrintContents = GetStringRvalue(printArgument);
-				if (PrintContents == null)
-				{
-					PrintContents = "null";
-				}
+				PrintContents = TryGetPrintContents();
 				PrintFlag = true;
 				return;
 			}
 
-			// As for it is now, string definition is a special case
-			if (tokens[0] == "String" && tokens.Count > 1)
+			if (_types.TypeExists(_tokens[0].value) && (_tokens.Count == 2 || _tokens.Count == 4))
 			{
-				ReactAtStringDefinition(tokens);
+				ReactAtVariableDeclaration();
 				return;
 			}
 
-			// As for it is now, string assignment is a special case
-			if (_variables.VariableExists(tokens[0], _types.GetType("String")) &&
-				tokens.Count == 3 && tokens[1] == "=")
+			// assign value to an existing variable
+			if (_tokens.Count == 3 && _tokens[1].value == "=")
 			{
-				_variables.GetVariable(tokens[0]).PrimitiveValue =
-									GetStringRvalue(tokens[2]);
+				if (_variables.VariableExists(_tokens[0].value))
+				{
+					var modifiableVariable = _variables.GetVariable(_tokens[0].value);
+					modifiableVariable.CopyValueFrom(
+							GetRvalue(modifiableVariable.Type.TypeName, _tokens[2]));
+					return;
+				}
+				else
+				{
+					throw new Exception($"Unknown identifier \"{_tokens[0].value}\".");
+				}
+				
+			}
+
+			// if statement
+			if (_tokens[0].value == "if")
+			{
+				if (_tokens.Count == 1)
+				{
+					throw new Exception("Expected a condition after an \"if\" statement.");
+				}
+
+				ScalpVariable conditionIsTrue = GetRvalue("Bool", _tokens[1]);
+
+				if (_tokens.Count > 2)
+				{
+					throw new Exception($"The line is too long.\n" +
+						$"Expected new line after the condition (\"{_tokens[1].value}\").");
+				}
+
+				if (!(bool)conditionIsTrue.PrimitiveValue)
+				{
+					_ignoreLineFlag = true;
+				}
+
 				return;
 			}
 
 			throw new Exception("The grammar of this line is incorrect. What did you mean by that?");
 		}
 
-		private void ReactAtStringDefinition(List<string> tokens)
+		private string TryGetPrintContents()
 		{
-			if (!IsValidIdentifierName(tokens[1]))
+			// An "overload" for Bool
+			try
 			{
-				throw new Exception($"\"{tokens[1]}\" is an invalid identifier.\n" +
-							"Identifiers must only contain letters, digits, underscores or dashes\n" +
-							"and must not start with a digit.");
+				var boolToPrint = GetRvalue("Bool", _tokens[2]);
+				return boolToPrint.PrimitiveValue == null ? "null" :
+					((bool)boolToPrint.PrimitiveValue == true ? "true" : "false");
 			}
+			catch { }
 
-			var newVariable = new ScalpVariable(tokens[1], _types.GetType("String"));
-			_variables.AddVariable(newVariable); // throws redefinition exceptions
-			if (tokens.Count == 4 && tokens[2] == "=")
+			// An "overload" for String
+			var stringToPrint = GetRvalue("String", _tokens[2]);
+			PrintContents = stringToPrint.PrimitiveValue as string;
+			if (PrintContents == null)
 			{
-				newVariable.PrimitiveValue = GetStringRvalue(tokens[3]);
+				PrintContents = "null";
 			}
+			return PrintContents;
 		}
 
-		private string GetStringRvalue(string argument)
+		private void ReactAtVariableDeclaration()
 		{
-			if (_variables.VariableExists(argument, _types.GetType("String")))
+			if (!IsValidIdentifierName(_tokens[1].value))
 			{
-				return _variables.GetVariable(argument).PrimitiveValue as string;
-			}
-			else if (_variables.VariableExists(argument))
-			{
-				throw new Exception($"Variable \"{argument}\" is not of type String.");
+				throw new Exception($"\"{_tokens[1].value}\" is an invalid identifier.\n" +
+							"Identifiers must only contain letters, digits, underscores or dashes\n" +
+							"must not be a Scalp keyword and must not start with a digit.");
 			}
 
-			else if (argument.StartsWith('"'))
+			var newVariable = new ScalpVariable(_tokens[1].value,
+												_types.GetType(_tokens[0].value));
+
+			if (_tokens.Count == 4 && _tokens[2].value == "=")
 			{
-				if (argument == "\"" || !argument.EndsWith('"'))
-				{
-					throw new Exception("Expected string end (the closing \" is missing).");
-				}
-				else // it's a normal string literal
-				{
-					return StringOperations.TrimQuotes(argument);
-				}
+				newVariable.CopyValueFrom(
+						GetRvalue(newVariable.Type.TypeName, _tokens[3]));
+			}
+
+			_variables.AddVariable(newVariable);
+		}
+
+		private ScalpVariable GetRvalue(string expectedType, ScalpToken token)
+		{
+			// Creating a tempopary string from a literal is a type-specific case
+			if (expectedType == "String" && token.kind == ScalpToken.Kind.StringLiteral)
+			{
+				var stringFromLiteral = new ScalpVariable("", _types.GetType("String"));
+				stringFromLiteral.PrimitiveValue = StringOperations.TrimQuotes(token.value);
+				return stringFromLiteral;
+			}
+			// As is creating a bool from a literal
+			if (expectedType == "Bool" && token.kind == ScalpToken.Kind.BoolLiteral)
+			{
+				var boolFromLiteral = new ScalpVariable("", _types.GetType("Bool"));
+				boolFromLiteral.PrimitiveValue = (token.value == "true" ? true : false);
+				return boolFromLiteral;
+			}
+
+			else if (_variables.VariableExists(token.value, _types.GetType(expectedType)))
+			{
+				return _variables.GetVariable(token.value);
+			}
+			else if (_variables.VariableExists(token.value))
+			{
+				throw new Exception($" Wrong type of variable \"{token.value}\".\n" +
+					$"Expected: \"{expectedType}\", got: \"{_variables.GetVariable(token.value).Type.TypeName}\".");
+			}
+			else if (_types.TypeExists(token.value))
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of typename \"{token.value}\".");
+			}
+			else if (token.kind == ScalpToken.Kind.StringLiteral)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a String literal.");
+			}
+			else if (token.kind == ScalpToken.Kind.CharLiteral)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a Char literal.");
+			}
+			else if (token.kind == ScalpToken.Kind.BoolLiteral)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a Bool literal.");
+			}
+			else if (token.kind == ScalpToken.Kind.Keyword)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a keyword \"{token.value}\".");
 			}
 			else
 			{
-				throw new Exception($"\"{argument}\" is neither a string literal nor a variable!");
+				throw new Exception($"Unknown identifier \"{token.value}\".");
 			}
 		}
 
@@ -136,7 +226,9 @@ namespace Scalp.Brains
 								('0' <= ch && ch <= '9') ||
 								ch == '_' || ch == '-')
 				&&
-				!('0' <= name[0] && name[0] <= '9');
+				!('0' <= name[0] && name[0] <= '9')
+				&&
+				!Tokenizer.KEYWORDS.Contains(name);
 		}
 	}
 }
