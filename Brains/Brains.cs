@@ -56,7 +56,8 @@ namespace Scalp.Brains
 			if (_tokens.Count == 4 && _tokens[0].value == "print" &&
 				_tokens[1].value == "(" && _tokens[3].value == ")")
 			{
-				PrintContents = GetRvalue("String", _tokens[2]);
+				var stringToPrint = GetRvalue("String", _tokens[2]);
+				PrintContents = stringToPrint.PrimitiveValue as string;
 				if (PrintContents == null)
 				{
 					PrintContents = "null";
@@ -76,8 +77,8 @@ namespace Scalp.Brains
 			if (_variables.VariableExists(_tokens[0].value, _types.GetType("String")) &&
 				_tokens.Count == 3 && _tokens[1].value == "=")
 			{
-				_variables.GetVariable(_tokens[0].value).PrimitiveValue =
-									GetRvalue("String", _tokens[2]);
+				_variables.GetVariable(_tokens[0].value).PrimitiveValue = 
+							GetRvalue("String", _tokens[2]).PrimitiveValue;
 				return;
 			}
 
@@ -98,21 +99,24 @@ namespace Scalp.Brains
 
 			if (_tokens.Count == 4 && _tokens[2].value == "=")
 			{
-				newVariable.PrimitiveValue = GetRvalue(newVariable.Type.TypeName, _tokens[3]);
+				newVariable.PrimitiveValue =
+					GetRvalue(newVariable.Type.TypeName, _tokens[3]).PrimitiveValue;
 			}
 
 			_variables.AddVariable(newVariable);
 		}
 
-		private string GetRvalue(string expectedType, ScalpToken token)
+		private ScalpVariable GetRvalue(string expectedType, ScalpToken token)
 		{
 			if (token.kind == ScalpToken.Kind.StringLiteral)
 			{
-				return StringOperations.TrimQuotes(token.value);
+				var stringFromLiteral = new ScalpVariable("", _types.GetType("String"));
+				stringFromLiteral.PrimitiveValue = StringOperations.TrimQuotes(token.value);
+				return stringFromLiteral;
 			}
 			else if (_variables.VariableExists(token.value, _types.GetType("String")))
 			{
-				return _variables.GetVariable(token.value).PrimitiveValue as string;
+				return _variables.GetVariable(token.value);
 			}
 			else if (_variables.VariableExists(token.value))
 			{
