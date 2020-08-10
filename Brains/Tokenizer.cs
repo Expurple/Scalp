@@ -10,6 +10,8 @@ namespace Scalp.Brains
 	{
 		public readonly List<char> SEPARATE_CHAR_TOKENS = new List<char>
 			{ '=', '(', ')' };
+		public readonly List<string> BOOL_LITERALS = new List<string>
+			{ "true", "false" };
 
 		private string _statement;
 		private List<ScalpToken> _tokens;
@@ -46,6 +48,12 @@ namespace Scalp.Brains
 				else
 				{
 					_token.value += _statement[i];
+
+					if (BOOL_LITERALS.Contains(_token.value))
+					{
+						_token.kind = ScalpToken.Kind.BoolLiteral;
+						SaveActiveToken();
+					}
 				}
 			}
 			SaveActiveToken();

@@ -17,7 +17,7 @@ namespace Scalp.CoreClasses
 
 		public enum Kind
 		{
-			Identifier, Character, Keyword, StringLiteral, CharLiteral
+			Identifier, Character, Keyword, BoolLiteral, StringLiteral, CharLiteral
 		}
 	}
 }

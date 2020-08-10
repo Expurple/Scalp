@@ -122,6 +122,13 @@ namespace Scalp.Brains
 				stringFromLiteral.PrimitiveValue = StringOperations.TrimQuotes(token.value);
 				return stringFromLiteral;
 			}
+			// As is creating a bool from a literal
+			if (expectedType == "Bool" && token.kind == ScalpToken.Kind.BoolLiteral)
+			{
+				var boolFromLiteral = new ScalpVariable("", _types.GetType("Bool"));
+				boolFromLiteral.PrimitiveValue = (token.value == "true" ? true : false);
+				return boolFromLiteral;
+			}
 
 			else if (_variables.VariableExists(token.value, _types.GetType(expectedType)))
 			{

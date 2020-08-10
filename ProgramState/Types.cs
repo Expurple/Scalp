@@ -45,6 +45,7 @@ namespace Scalp.ProgramState
 
 			// Filling in primitive system types:
 			AddType(new ScalpType("String"));
+			AddType(new ScalpType("Bool"));
 		}
 	}
 }
