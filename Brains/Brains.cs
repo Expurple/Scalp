@@ -16,6 +16,7 @@ namespace Scalp.Brains
 	{
 		public bool ExitFlag { get; private set; }
 		public bool PrintFlag { get; private set; }
+		private bool _ignoreLineFlag;
 
 		public string PrintContents { get; private set; }
 
@@ -36,6 +37,10 @@ namespace Scalp.Brains
 
 		public void ReactAt(string input)
 		{
+			if (_ignoreLineFlag)
+				return;
+
+			_ignoreLineFlag = false;
 			PrintFlag = false;
 			_tokens = _tokenizer.Tokenize(input);
 			ReactAtTokens();
@@ -96,12 +101,17 @@ namespace Scalp.Brains
 					throw new Exception("Expected a condition after an \"if\" statement.");
 				}
 
-				ScalpVariable condition = GetRvalue("Bool", _tokens[1]);
+				ScalpVariable conditionIsTrue = GetRvalue("Bool", _tokens[1]);
 
 				if (_tokens.Count > 2)
 				{
 					throw new Exception($"The line is too long.\n" +
 						$"Expected new line after the condition (\"{_tokens[1].value}\").");
+				}
+
+				if (!(bool)conditionIsTrue.PrimitiveValue)
+				{
+					_ignoreLineFlag = true;
 				}
 
 				return;
