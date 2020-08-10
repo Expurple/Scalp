@@ -43,7 +43,7 @@ namespace Scalp.Brains
 					_tokens.Add(new ScalpToken(_statement[i].ToString(),
 												ScalpToken.Kind.Character));
 				}
-				else if (_statement[i] == ' ')
+				else if (_statement[i] == ' ' || _statement[i] == '\t')
 				{
 					SaveActiveToken();
 				}
