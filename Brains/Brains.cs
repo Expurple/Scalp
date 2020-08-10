@@ -44,19 +44,18 @@ namespace Scalp.Brains
 			}
 
 			// Language has no functions yet, so we treat exit() as a special case
-			if (tokens.Count >= 3 && tokens[0] == "exit" &&
-				tokens[1] == "(" && tokens[2] == ")")
+			if (tokens.Count >= 3 && tokens[0].value == "exit" &&
+				tokens[1].value == "(" && tokens[2].value == ")")
 			{
 				ExitFlag = true;
 				return;
 			}
 
 			// Language has no functions yet, so we treat print() as a special case
-			if (tokens.Count >= 4 && tokens[0] == "print" &&
-				tokens[1] == "(" && tokens[3] == ")")
+			if (tokens.Count >= 4 && tokens[0].value == "print" &&
+				tokens[1].value == "(" && tokens[3].value == ")")
 			{
-				string printArgument = tokens[2];
-				PrintContents = GetStringRvalue(printArgument);
+				PrintContents = GetStringRvalue(tokens[2]);
 				if (PrintContents == null)
 				{
 					PrintContents = "null";
@@ -66,17 +65,17 @@ namespace Scalp.Brains
 			}
 
 			// As for it is now, string definition is a special case
-			if (tokens[0] == "String" && tokens.Count > 1)
+			if (tokens[0].value == "String" && tokens.Count > 1)
 			{
 				ReactAtStringDefinition(tokens);
 				return;
 			}
 
 			// As for it is now, string assignment is a special case
-			if (_variables.VariableExists(tokens[0], _types.GetType("String")) &&
-				tokens.Count == 3 && tokens[1] == "=")
+			if (_variables.VariableExists(tokens[0].value, _types.GetType("String")) &&
+				tokens.Count == 3 && tokens[1].value == "=")
 			{
-				_variables.GetVariable(tokens[0]).PrimitiveValue =
+				_variables.GetVariable(tokens[0].value).PrimitiveValue =
 									GetStringRvalue(tokens[2]);
 				return;
 			}
@@ -84,41 +83,44 @@ namespace Scalp.Brains
 			throw new Exception("The grammar of this line is incorrect. What did you mean by that?");
 		}
 
-		private void ReactAtStringDefinition(List<string> tokens)
+		private void ReactAtStringDefinition(List<ScalpToken> tokens)
 		{
-			if (!IsValidIdentifierName(tokens[1]))
+			if (!IsValidIdentifierName(tokens[1].value))
 			{
 				throw new Exception($"\"{tokens[1]}\" is an invalid identifier.\n" +
 							"Identifiers must only contain letters, digits, underscores or dashes\n" +
 							"and must not start with a digit.");
 			}
 
-			var newVariable = new ScalpVariable(tokens[1], _types.GetType("String"));
+			var newVariable = new ScalpVariable(tokens[1].value, _types.GetType("String"));
 			_variables.AddVariable(newVariable); // throws redefinition exceptions
-			if (tokens.Count == 4 && tokens[2] == "=")
+			if (tokens.Count == 4 && tokens[2].value == "=")
 			{
 				newVariable.PrimitiveValue = GetStringRvalue(tokens[3]);
 			}
 		}
 
-		private string GetStringRvalue(string argument)
+		private string GetStringRvalue(ScalpToken token)
 		{
-			if (_variables.VariableExists(argument, _types.GetType("String")))
+			if (token.kind == ScalpToken.Kind.StringLiteral)
 			{
-				return _variables.GetVariable(argument).PrimitiveValue as string;
+				return StringOperations.TrimQuotes(token.value);
 			}
-			else if (_variables.VariableExists(argument))
+			else if (_variables.VariableExists(token.value, _types.GetType("String")))
 			{
-				throw new Exception($"Variable \"{argument}\" is not of type String.");
+				return _variables.GetVariable(token.value).PrimitiveValue as string;
 			}
-
-			else if (argument.StartsWith('"')) // it's a string literal
+			else if (_variables.VariableExists(token.value))
 			{
-				return StringOperations.TrimQuotes(argument);
+				throw new Exception($"Variable \"{token.value}\" is not of type String.");
+			}
+			else if (_types.TypeExists(token.value))
+			{
+				throw new Exception($"Expected a string instance instead of typename \"{token.value}\".");
 			}
 			else
 			{
-				throw new Exception($"\"{argument}\" is neither a string literal nor a variable!");
+				throw new Exception($"Unknown identifier \"{token.value}\".");
 			}
 		}
 

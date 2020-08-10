@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using Scalp.CoreClasses;
+
 namespace Scalp.Brains
 {
 	class Tokenizer
@@ -10,14 +12,14 @@ namespace Scalp.Brains
 			{ '=', '(', ')' };
 
 		private string _statement;
-		private List<string> _tokens;
-		private string _token; // Could've been a StringBuilder, but it's more readable like this.
+		private List<ScalpToken> _tokens;
+		private ScalpToken _token; // Could've been a StringBuilder, but it's more readable like this.
 
-		public List<string> Tokenize(string statement)
+		public List<ScalpToken> Tokenize(string statement)
 		{
 			_statement = statement;
-			_tokens = new List<string>();
-			_token = "";
+			_tokens = new List<ScalpToken>();
+			_token = new ScalpToken("", ScalpToken.Kind.Identifier);
 
 			for (int i = 0; i < _statement.Length; i++)
 			{
@@ -34,7 +36,8 @@ namespace Scalp.Brains
 				else if (SEPARATE_CHAR_TOKENS.Contains(_statement[i]))
 				{
 					SaveActiveToken();
-					_tokens.Add(_statement[i].ToString());
+					_tokens.Add(new ScalpToken(_statement[i].ToString(),
+												ScalpToken.Kind.Character));
 				}
 				else if (_statement[i] == ' ')
 				{
@@ -42,7 +45,7 @@ namespace Scalp.Brains
 				}
 				else
 				{
-					_token += _statement[i];
+					_token.value += _statement[i];
 				}
 			}
 			SaveActiveToken();
@@ -51,19 +54,19 @@ namespace Scalp.Brains
 
 		private void SaveActiveToken()
 		{
-			if (_token != "")
+			if (_token.value != "")
 			{
 				_tokens.Add(_token);
-				_token = "";
+				_token = new ScalpToken("", ScalpToken.Kind.Identifier);
 			}
 		}
 
-		private string TokenizeCharLiteral(ref int i)
+		private ScalpToken TokenizeCharLiteral(ref int i)
 		{
 			if (i < _statement.Length - 2 && _statement[i + 2] == '\'')
 			{
 				i += 2;
-				return _statement[i - 1].ToString();
+				return new ScalpToken(_statement[i - 1].ToString(), ScalpToken.Kind.CharLiteral);
 			}
 			else
 			{
@@ -71,7 +74,7 @@ namespace Scalp.Brains
 			}
 		}
 
-		private string TokenizeStringLiteral(ref int i)
+		private ScalpToken TokenizeStringLiteral(ref int i)
 		{
 			var literal = new StringBuilder("\"");
 			i++;
@@ -80,7 +83,7 @@ namespace Scalp.Brains
 				literal.Append(_statement[i]);
 				if (_statement[i] == '\"')
 				{
-					return literal.ToString();
+					return new ScalpToken(literal.ToString(), ScalpToken.Kind.StringLiteral);
 				}
 			}
 			throw new ArgumentException($"Expected \" at the end of line to close the opened string literal \'{literal.ToString()}\'.");
