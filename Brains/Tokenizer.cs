@@ -47,7 +47,7 @@ namespace Scalp.Brains
 				{
 					SaveActiveToken();
 					_tokens.Add(TokenizeStringLiteral());
-					_token.posInSourceLine += _tokens.Last().value.Length + 2;
+					_token.posInSourceLine += _tokens.Last().value.Length;
 				}
 				else if (SEPARATE_CHAR_TOKENS.Contains(_statement[i]))
 				{
@@ -96,6 +96,7 @@ namespace Scalp.Brains
 			if (token.kind == ScalpToken.Kind.Identifier
 					&& !IsValidIdentifierName(token.value))
 			{
+				SetErrorPos(token.posInSourceLine);
 				throw new Exception($"\"{token.value}\" is an invalid identifier.\n" +
 					"Identifiers must only contain ASCII letters, digits, underscores or dashes,\n" +
 					"and must not start with a digit.");
@@ -117,18 +118,19 @@ namespace Scalp.Brains
 			if (i < _statement.Length - 2 && _statement[i + 2] == '\'')
 			{
 				i += 2;
-				return new ScalpToken(_statement[(i - 2)..i],
+				return new ScalpToken(_statement[(i - 2)..(i + 1)],
 									ScalpToken.Kind.CharLiteral, i - 2);
 			}
 			else
 			{
+				SetErrorPos(i);
 				throw new ArgumentException("Invalid char literal!");
 			}
 		}
 
 		private ScalpToken TokenizeStringLiteral()
 		{
-			var newToken = new ScalpToken("", ScalpToken.Kind.StringLiteral, i);
+			var newToken = new ScalpToken("\"", ScalpToken.Kind.StringLiteral, i);
 			i++;
 			for (/*     */; i < _statement.Length; i++)
 			{
@@ -138,6 +140,7 @@ namespace Scalp.Brains
 					return newToken;
 				}
 			}
+			SetErrorPos(_statement.Length - 1);
 			throw new ArgumentException("Expected \" at the end of line " + 
 				$"to close the opened string literal \'{newToken.value}\'.");
 		}
