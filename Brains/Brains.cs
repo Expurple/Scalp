@@ -92,24 +92,7 @@ namespace Scalp.Brains
 			// If statement
 			if (_tokens[0].value == "if")
 			{
-				if (_tokens.Count == 1)
-				{
-					throw new Exception("Expected a condition after an \"if\" statement.");
-				}
-
-				ScalpVariable conditionIsTrue = GetRvalue("Bool", _tokens[1]);
-
-				if (_tokens.Count > 2)
-				{
-					throw new Exception($"The line is too long.\n" +
-						$"Expected new line after the condition (\"{_tokens[1].value}\").");
-				}
-
-				if (!(bool)conditionIsTrue.PrimitiveValue)
-				{
-					_ignoreLineFlag = true;
-				}
-
+				ReactAtIfStatement();
 				return;
 			}
 
@@ -170,6 +153,27 @@ namespace Scalp.Brains
 			else
 			{
 				throw new Exception($"Unknown identifier \"{_tokens[0].value}\".");
+			}
+		}
+
+		private void ReactAtIfStatement()
+		{
+			if (_tokens.Count == 1)
+			{
+				throw new Exception("Expected a condition after an \"if\" statement.");
+			}
+
+			ScalpVariable conditionIsTrue = GetRvalue("Bool", _tokens[1]);
+
+			if (_tokens.Count > 2)
+			{
+				throw new Exception($"The line is too long.\n" +
+					$"Expected new line after the condition (\"{_tokens[1].value}\").");
+			}
+
+			if (!(bool)conditionIsTrue.PrimitiveValue)
+			{
+				_ignoreLineFlag = true;
 			}
 		}
 
