@@ -16,6 +16,7 @@ namespace Scalp.Brains
 		public static readonly List<string> KEYWORDS = new List<string>
 			{ "if", "endif" };
 
+		private int i;
 		private string _statement;
 		private List<ScalpToken> _tokens;
 		private ScalpToken _token;
@@ -34,17 +35,17 @@ namespace Scalp.Brains
 			_tokens = new List<ScalpToken>();
 			_token = new ScalpToken("", ScalpToken.Kind.Identifier);
 
-			for (int i = 0; i < _statement.Length; i++)
+			for (i = 0; i < _statement.Length; i++)
 			{
 				if (_statement[i] == '\'')
 				{
 					SaveActiveToken();
-					_tokens.Add(TokenizeCharLiteral(ref i));
+					_tokens.Add(TokenizeCharLiteral());
 				}
 				else if (_statement[i] == '\"')
 				{
 					SaveActiveToken();
-					_tokens.Add(TokenizeStringLiteral(ref i));
+					_tokens.Add(TokenizeStringLiteral());
 				}
 				else if (SEPARATE_CHAR_TOKENS.Contains(_statement[i]))
 				{
@@ -107,7 +108,7 @@ namespace Scalp.Brains
 				!('0' <= name[0] && name[0] <= '9');
 		}
 
-		private ScalpToken TokenizeCharLiteral(ref int i)
+		private ScalpToken TokenizeCharLiteral()
 		{
 			if (i < _statement.Length - 2 && _statement[i + 2] == '\'')
 			{
@@ -120,7 +121,7 @@ namespace Scalp.Brains
 			}
 		}
 
-		private ScalpToken TokenizeStringLiteral(ref int i)
+		private ScalpToken TokenizeStringLiteral()
 		{
 			var literal = new StringBuilder("\"");
 			i++;
