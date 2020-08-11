@@ -112,7 +112,8 @@ namespace Scalp.Brains
 				return;
 			}
 
-			throw new Exception("The grammar of this line is incorrect. Interpreter can't figure it out.");
+			throw new Exception("The grammar of this line is incorrect. Interpreter can't figure it out.\n" +
+				$"You can learn more about Scalp syntax at {GlobalConstants.GITHUB_WIKI_LINK}");
 		}
 
 		private string TryGetPrintContents()
