@@ -14,7 +14,7 @@ namespace Scalp.Brains
 		public static readonly List<string> BOOL_LITERALS = new List<string>
 			{ "true", "false" };
 		public static readonly List<string> KEYWORDS = new List<string>
-			{ "if" };
+			{ "if", "endif" };
 
 		private string _statement;
 		private List<ScalpToken> _tokens;

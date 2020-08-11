@@ -37,17 +37,23 @@ namespace Scalp.Brains
 
 		public void ReactAt(string input)
 		{
+			PrintFlag = false;
+			_tokens = _tokenizer.Tokenize(input);
+
 			if (_ignoreLineFlag)
 			{
-				if (input.TrimStart(' ').TrimStart('\t').StartsWith("endif"))
+				if (_tokens.Count > 0 && _tokens[0].value == "endif")
 				{
+					if (_tokens.Count > 1)
+					{
+						throw new Exception("Expected a new line after \"endif\".");
+					}
 					_ignoreLineFlag = false;
 				}
+
 				return;
 			}
 
-			PrintFlag = false;
-			_tokens = _tokenizer.Tokenize(input);
 			ReactAtTokens();
 		}
 
