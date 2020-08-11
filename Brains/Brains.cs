@@ -84,18 +84,7 @@ namespace Scalp.Brains
 			// assign value to an existing variable
 			if (_tokens.Count == 3 && _tokens[1].value == "=")
 			{
-				if (_variables.VariableExists(_tokens[0].value))
-				{
-					var modifiableVariable = _variables.GetVariable(_tokens[0].value);
-					modifiableVariable.CopyValueFrom(
-							GetRvalue(modifiableVariable.Type.TypeName, _tokens[2]));
-					return;
-				}
-				else
-				{
-					throw new Exception($"Unknown identifier \"{_tokens[0].value}\".");
-				}
-				
+				ReactAtVariableAssign();
 			}
 
 			// if statement
@@ -165,6 +154,21 @@ namespace Scalp.Brains
 			}
 
 			_variables.AddVariable(newVariable);
+		}
+
+		private void ReactAtVariableAssign()
+		{
+			if (_variables.VariableExists(_tokens[0].value))
+			{
+				var modifiableVariable = _variables.GetVariable(_tokens[0].value);
+				modifiableVariable.CopyValueFrom(
+						GetRvalue(modifiableVariable.Type.TypeName, _tokens[2]));
+				return;
+			}
+			else
+			{
+				throw new Exception($"Unknown identifier \"{_tokens[0].value}\".");
+			}
 		}
 
 		private ScalpVariable GetRvalue(string expectedType, ScalpToken token)
