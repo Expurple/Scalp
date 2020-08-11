@@ -123,13 +123,6 @@ namespace Scalp.Brains
 
 		private void ReactAtVariableDeclaration()
 		{
-			if (!IsValidIdentifierName(_tokens[1].value))
-			{
-				throw new Exception($"\"{_tokens[1].value}\" is an invalid identifier.\n" +
-							"Identifiers must only contain letters, digits, underscores or dashes\n" +
-							"must not be a Scalp keyword and must not start with a digit.");
-			}
-
 			var newVariable = new ScalpVariable(_tokens[1].value,
 												_types.GetType(_tokens[0].value));
 
@@ -227,18 +220,6 @@ namespace Scalp.Brains
 			{
 				throw new Exception($"Unknown identifier \"{token.value}\".");
 			}
-		}
-
-		private bool IsValidIdentifierName(string name)
-		{
-			return name.All(ch => ('a' <= ch && ch <= 'z') ||
-								('A' <= ch && ch <= 'Z') ||
-								('0' <= ch && ch <= '9') ||
-								ch == '_' || ch == '-')
-				&&
-				!('0' <= name[0] && name[0] <= '9')
-				&&
-				!Tokenizer.KEYWORDS.Contains(name);
 		}
 	}
 }

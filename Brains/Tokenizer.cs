@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 using Scalp.CoreClasses;
 
@@ -69,11 +70,35 @@ namespace Scalp.Brains
 
 		private void SaveActiveToken()
 		{
-			if (_token.value != "")
+			if (_token.value != "") // otherwise no need to save
 			{
+				CheckForInvalidIdentifier(_token);
 				_tokens.Add(_token);
 				_token = new ScalpToken("", ScalpToken.Kind.Identifier);
 			}
+		}
+
+		private void CheckForInvalidIdentifier(ScalpToken token)
+		{
+			if (token.kind == ScalpToken.Kind.Identifier
+					&& !IsValidIdentifierName(token.value))
+			{
+				throw new Exception($"\"{token.value}\" is an invalid identifier.\n" +
+					"Identifiers must only contain letters, digits, underscores or dashes,\n" +
+					"must not be a Scalp keyword and must not start with a digit.");
+			}
+		}
+
+		private bool IsValidIdentifierName(string name)
+		{
+			return name.All(ch => ('a' <= ch && ch <= 'z') ||
+								('A' <= ch && ch <= 'Z') ||
+								('0' <= ch && ch <= '9') ||
+								ch == '_' || ch == '-')
+				&&
+				!('0' <= name[0] && name[0] <= '9')
+				&&
+				!KEYWORDS.Contains(name);
 		}
 
 		private ScalpToken TokenizeCharLiteral(ref int i)
