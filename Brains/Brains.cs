@@ -47,6 +47,7 @@ namespace Scalp.Brains
 				{
 					if (_tokens.Count > 1)
 					{
+						ErrorPos = _tokens[0].posInSourceLine + 4;
 						throw new Exception("Expected a new line after \"endif\".");
 					}
 					_ignoreLineFlag = false;
@@ -103,6 +104,7 @@ namespace Scalp.Brains
 				return;
 			}
 
+			ErrorPos = _tokens[0].posInSourceLine;
 			throw new Exception("The grammar of this line is incorrect. Interpreter can't figure it out.\n" +
 				$"You can learn more about Scalp syntax at {GlobalConstants.GITHUB_WIKI_LINK}");
 		}
@@ -132,6 +134,7 @@ namespace Scalp.Brains
 		{
 			if (Tokenizer.KEYWORDS.Contains(_tokens[1].value))
 			{
+				ErrorPos = _tokens[1].posInSourceLine;
 				throw new Exception($"Keyword \"{_tokens[1].value}\" can't be used as a variable name.");
 			}
 
@@ -157,6 +160,7 @@ namespace Scalp.Brains
 			}
 			else
 			{
+				ErrorPos = _tokens[0].posInSourceLine;
 				throw new Exception($"Unknown identifier \"{_tokens[0].value}\".");
 			}
 		}
@@ -165,6 +169,7 @@ namespace Scalp.Brains
 		{
 			if (_tokens.Count == 1)
 			{
+				ErrorPos = _tokens[0].posInSourceLine + 1;
 				throw new Exception("Expected a condition after an \"if\" statement.");
 			}
 
@@ -172,8 +177,8 @@ namespace Scalp.Brains
 
 			if (_tokens.Count > 2)
 			{
-				throw new Exception($"The line is too long.\n" +
-					$"Expected new line after the condition (\"{_tokens[1].value}\").");
+				ErrorPos = _tokens[1].posInSourceLine + _tokens[1].value.Length - 1;
+				throw new Exception($"Expected new line after the condition (\"{_tokens[1].value}\").");
 			}
 
 			if (!(bool)conditionIsTrue.PrimitiveValue)
@@ -205,31 +210,38 @@ namespace Scalp.Brains
 			}
 			else if (_variables.VariableExists(token.value))
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($" Wrong type of variable \"{token.value}\".\n" +
 					$"Expected: \"{expectedType}\", got: \"{_variables.GetVariable(token.value).Type.TypeName}\".");
 			}
 			else if (_types.TypeExists(token.value))
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Expected a {expectedType} instance instead of typename \"{token.value}\".");
 			}
 			else if (token.kind == ScalpToken.Kind.StringLiteral)
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Expected a {expectedType} instance instead of a String literal.");
 			}
 			else if (token.kind == ScalpToken.Kind.CharLiteral)
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Expected a {expectedType} instance instead of a Char literal.");
 			}
 			else if (token.kind == ScalpToken.Kind.BoolLiteral)
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Expected a {expectedType} instance instead of a Bool literal.");
 			}
 			else if (token.kind == ScalpToken.Kind.Keyword)
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Expected a {expectedType} instance instead of a keyword \"{token.value}\".");
 			}
 			else
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Unknown identifier \"{token.value}\".");
 			}
 		}

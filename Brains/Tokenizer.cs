@@ -142,7 +142,7 @@ namespace Scalp.Brains
 			}
 			SetErrorPos(_statement.Length - 1);
 			throw new ArgumentException("Expected \" at the end of line " + 
-				$"to close the opened string literal \'{newToken.value}\'.");
+				$"to close the opened string literal {newToken.value}");
 		}
 	}
 }
