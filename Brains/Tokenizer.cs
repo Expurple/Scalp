@@ -33,7 +33,7 @@ namespace Scalp.Brains
 		{
 			_statement = statement;
 			_tokens = new List<ScalpToken>();
-			_token = new ScalpToken("", ScalpToken.Kind.Identifier);
+			_token = new ScalpToken("", ScalpToken.Kind.Identifier, 0);
 
 			for (i = 0; i < _statement.Length; i++)
 			{
@@ -41,21 +41,25 @@ namespace Scalp.Brains
 				{
 					SaveActiveToken();
 					_tokens.Add(TokenizeCharLiteral());
+					_token.posInSourceLine += 3;
 				}
 				else if (_statement[i] == '\"')
 				{
 					SaveActiveToken();
 					_tokens.Add(TokenizeStringLiteral());
+					_token.posInSourceLine += _tokens.Last().value.Length + 2;
 				}
 				else if (SEPARATE_CHAR_TOKENS.Contains(_statement[i]))
 				{
 					SaveActiveToken();
 					_tokens.Add(new ScalpToken(_statement[i].ToString(),
-												ScalpToken.Kind.Character));
+												ScalpToken.Kind.Character, i));
+					_token.posInSourceLine++;
 				}
 				else if (_statement[i] == ' ' || _statement[i] == '\t')
 				{
 					SaveActiveToken();
+					_token.posInSourceLine++;
 				}
 				else
 				{
@@ -83,7 +87,7 @@ namespace Scalp.Brains
 			{
 				CheckForInvalidIdentifier(_token);
 				_tokens.Add(_token);
-				_token = new ScalpToken("", ScalpToken.Kind.Identifier);
+				_token = new ScalpToken("", ScalpToken.Kind.Identifier, i);
 			}
 		}
 
@@ -113,7 +117,8 @@ namespace Scalp.Brains
 			if (i < _statement.Length - 2 && _statement[i + 2] == '\'')
 			{
 				i += 2;
-				return new ScalpToken(_statement[i - 1].ToString(), ScalpToken.Kind.CharLiteral);
+				return new ScalpToken(_statement[(i - 2)..i],
+									ScalpToken.Kind.CharLiteral, i - 2);
 			}
 			else
 			{
@@ -123,17 +128,18 @@ namespace Scalp.Brains
 
 		private ScalpToken TokenizeStringLiteral()
 		{
-			var literal = new StringBuilder("\"");
+			var newToken = new ScalpToken("", ScalpToken.Kind.StringLiteral, i);
 			i++;
 			for (/*     */; i < _statement.Length; i++)
 			{
-				literal.Append(_statement[i]);
+				newToken.value += _statement[i];
 				if (_statement[i] == '\"')
 				{
-					return new ScalpToken(literal.ToString(), ScalpToken.Kind.StringLiteral);
+					return newToken;
 				}
 			}
-			throw new ArgumentException($"Expected \" at the end of line to close the opened string literal \'{literal.ToString()}\'.");
+			throw new ArgumentException("Expected \" at the end of line " + 
+				$"to close the opened string literal \'{newToken.value}\'.");
 		}
 	}
 }
