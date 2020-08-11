@@ -84,8 +84,8 @@ namespace Scalp.Brains
 					&& !IsValidIdentifierName(token.value))
 			{
 				throw new Exception($"\"{token.value}\" is an invalid identifier.\n" +
-					"Identifiers must only contain letters, digits, underscores or dashes,\n" +
-					"must not be a Scalp keyword and must not start with a digit.");
+					"Identifiers must only contain ASCII letters, digits, underscores or dashes,\n" +
+					"and must not start with a digit.");
 			}
 		}
 
@@ -96,9 +96,7 @@ namespace Scalp.Brains
 								('0' <= ch && ch <= '9') ||
 								ch == '_' || ch == '-')
 				&&
-				!('0' <= name[0] && name[0] <= '9')
-				&&
-				!KEYWORDS.Contains(name);
+				!('0' <= name[0] && name[0] <= '9');
 		}
 
 		private ScalpToken TokenizeCharLiteral(ref int i)

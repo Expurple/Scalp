@@ -129,6 +129,11 @@ namespace Scalp.Brains
 
 		private void ReactAtVariableDeclaration()
 		{
+			if (Tokenizer.KEYWORDS.Contains(_tokens[1].value))
+			{
+				throw new Exception($"Keyword \"{_tokens[1].value}\" can't be used as a variable name.");
+			}
+
 			var newVariable = new ScalpVariable(_tokens[1].value,
 												_types.GetType(_tokens[0].value));
 
