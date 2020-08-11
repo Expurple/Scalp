@@ -23,7 +23,8 @@ namespace Scalp
 				}
 				catch (Exception e)
 				{
-					Console.Write($"Scalp error: {e.Message}");
+					Console.Write($"Error pos = {brains.ErrorPos}\n" +
+									$"Scalp error: {e.Message}");
 					Console.Write(e.Message.EndsWith('\n') ? "" : "\n");
 					// Cause ">>> " must be on the new line every time
 				}
