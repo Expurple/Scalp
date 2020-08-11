@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Scalp
 {
@@ -23,7 +24,7 @@ namespace Scalp
 				}
 				catch (Exception e)
 				{
-					DisplayErrorPos(brains.ErrorPos);
+					DisplayErrorPos(brains.ErrorPos, input);
 					Console.Write($"Scalp error: {e.Message}");
 					Console.Write(e.Message.EndsWith('\n') ? "" : "\n");
 					// Cause ">>> " must be on the new line every time
@@ -43,9 +44,12 @@ namespace Scalp
 			}
 		}
 
-		private static void DisplayErrorPos(int pos)
+		private static void DisplayErrorPos(int pos, string input)
 		{
-			Console.WriteLine(new String(' ', ">>> ".Length + pos) + "^");
+			int nTabs = input[..pos].Count(ch => ch == '\t');
+			var tabs = new String('\t', nTabs);
+			var spaces = new String(' ', pos - nTabs + ">>> ".Length);
+			Console.WriteLine(spaces + tabs + "^");
 		}
 	}
 }
