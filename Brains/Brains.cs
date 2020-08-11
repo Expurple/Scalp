@@ -75,19 +75,20 @@ namespace Scalp.Brains
 				return;
 			}
 
+			// Variable declaration
 			if (_types.TypeExists(_tokens[0].value) && (_tokens.Count == 2 || _tokens.Count == 4))
 			{
 				ReactAtVariableDeclaration();
 				return;
 			}
 
-			// assign value to an existing variable
+			// Assign value to an existing variable
 			if (_tokens.Count == 3 && _tokens[1].value == "=")
 			{
 				ReactAtVariableAssign();
 			}
 
-			// if statement
+			// If statement
 			if (_tokens[0].value == "if")
 			{
 				if (_tokens.Count == 1)
@@ -111,7 +112,7 @@ namespace Scalp.Brains
 				return;
 			}
 
-			throw new Exception("The grammar of this line is incorrect. What did you mean by that?");
+			throw new Exception("The grammar of this line is incorrect. Interpreter can't figure it out.");
 		}
 
 		private string TryGetPrintContents()

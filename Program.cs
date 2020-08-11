@@ -34,6 +34,7 @@ namespace Scalp
 					Console.Write(brains.PrintContents.EndsWith('\n') ? "" : "\n");
 					// Cause ">>> " must be on the new line every time
 				}
+
 				if (brains.ExitFlag)
 				{
 					break;
