@@ -86,6 +86,7 @@ namespace Scalp.Brains
 			if (_tokens.Count == 3 && _tokens[1].value == "=")
 			{
 				ReactAtVariableAssign();
+				return;
 			}
 
 			// If statement
@@ -165,7 +166,6 @@ namespace Scalp.Brains
 				var modifiableVariable = _variables.GetVariable(_tokens[0].value);
 				modifiableVariable.CopyValueFrom(
 						GetRvalue(modifiableVariable.Type.TypeName, _tokens[2]));
-				return;
 			}
 			else
 			{
