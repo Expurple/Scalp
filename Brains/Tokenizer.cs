@@ -20,6 +20,14 @@ namespace Scalp.Brains
 		private List<ScalpToken> _tokens;
 		private ScalpToken _token;
 
+		public delegate void Setter(int pos);
+		Setter SetErrorPos;
+
+		public Tokenizer(Setter meansToSetErrorPos)
+		{
+			SetErrorPos = meansToSetErrorPos;
+		}
+
 		public List<ScalpToken> Tokenize(string statement)
 		{
 			_statement = statement;

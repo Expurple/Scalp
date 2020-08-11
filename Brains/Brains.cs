@@ -14,6 +14,7 @@ namespace Scalp.Brains
 	// and probably returning something to print.
 	class Brains
 	{
+		public int ErrorPos { get; private set; }
 		public bool ExitFlag { get; private set; }
 		public bool PrintFlag { get; private set; }
 		private bool _ignoreLineFlag = false;
@@ -29,7 +30,7 @@ namespace Scalp.Brains
 
 		public Brains(FullProgramState programState)
 		{
-			_tokenizer = new Tokenizer();
+			_tokenizer = new Tokenizer(pos => this.ErrorPos = pos);
 			_state = programState;
 			_types = _state.Types;
 			_variables = _state.Variables;
