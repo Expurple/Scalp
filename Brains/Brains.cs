@@ -14,9 +14,9 @@ namespace Scalp.Brains
 	// and probably returning something to print.
 	class Brains
 	{
+		public int ErrorPos { get; private set; }
 		public bool ExitFlag { get; private set; }
 		public bool PrintFlag { get; private set; }
-		private bool _ignoreLineFlag = false;
 
 		public string PrintContents { get; private set; }
 
@@ -29,7 +29,7 @@ namespace Scalp.Brains
 
 		public Brains(FullProgramState programState)
 		{
-			_tokenizer = new Tokenizer();
+			_tokenizer = new Tokenizer(pos => this.ErrorPos = pos);
 			_state = programState;
 			_types = _state.Types;
 			_variables = _state.Variables;
@@ -37,17 +37,29 @@ namespace Scalp.Brains
 
 		public void ReactAt(string input)
 		{
-			if (_ignoreLineFlag)
-			{
-				if (input.TrimStart(' ').TrimStart('\t').StartsWith("endif"))
-				{
-					_ignoreLineFlag = false;
-				}
-				return;
-			}
-
 			PrintFlag = false;
 			_tokens = _tokenizer.Tokenize(input);
+
+			if (_state.IfStack.Count != 0)
+			{
+				if (_tokens.Count > 0 && _tokens[0].value == "endif")
+				{
+					if (_tokens.Count > 1)
+					{
+						ErrorPos = _tokens[0].posInSourceLine + 4;
+						throw new Exception("Expected a new line after \"endif\".");
+					}
+					_state.IfStack.Pop();
+					return;
+				}
+
+				if (_state.IfStack.Any(condition => condition == false)
+					&& !(_tokens.Count > 0 && _tokens[0].value == "if")) // need to register ifs
+				{
+					return;
+				}
+			}
+
 			ReactAtTokens();
 		}
 
@@ -75,54 +87,30 @@ namespace Scalp.Brains
 				return;
 			}
 
+			// Variable declaration
 			if (_types.TypeExists(_tokens[0].value) && (_tokens.Count == 2 || _tokens.Count == 4))
 			{
 				ReactAtVariableDeclaration();
 				return;
 			}
 
-			// assign value to an existing variable
+			// Assign value to an existing variable
 			if (_tokens.Count == 3 && _tokens[1].value == "=")
 			{
-				if (_variables.VariableExists(_tokens[0].value))
-				{
-					var modifiableVariable = _variables.GetVariable(_tokens[0].value);
-					modifiableVariable.CopyValueFrom(
-							GetRvalue(modifiableVariable.Type.TypeName, _tokens[2]));
-					return;
-				}
-				else
-				{
-					throw new Exception($"Unknown identifier \"{_tokens[0].value}\".");
-				}
-				
-			}
-
-			// if statement
-			if (_tokens[0].value == "if")
-			{
-				if (_tokens.Count == 1)
-				{
-					throw new Exception("Expected a condition after an \"if\" statement.");
-				}
-
-				ScalpVariable conditionIsTrue = GetRvalue("Bool", _tokens[1]);
-
-				if (_tokens.Count > 2)
-				{
-					throw new Exception($"The line is too long.\n" +
-						$"Expected new line after the condition (\"{_tokens[1].value}\").");
-				}
-
-				if (!(bool)conditionIsTrue.PrimitiveValue)
-				{
-					_ignoreLineFlag = true;
-				}
-
+				ReactAtVariableAssign();
 				return;
 			}
 
-			throw new Exception("The grammar of this line is incorrect. What did you mean by that?");
+			// If statement
+			if (_tokens[0].value == "if")
+			{
+				ReactAtIfStatement();
+				return;
+			}
+
+			ErrorPos = _tokens[0].posInSourceLine;
+			throw new Exception("The grammar of this line is incorrect. Interpreter can't figure it out.\n" +
+				$"You can learn more about Scalp syntax at {GlobalConstants.GITHUB_WIKI_LINK}");
 		}
 
 		private string TryGetPrintContents()
@@ -148,11 +136,10 @@ namespace Scalp.Brains
 
 		private void ReactAtVariableDeclaration()
 		{
-			if (!IsValidIdentifierName(_tokens[1].value))
+			if (Tokenizer.KEYWORDS.Contains(_tokens[1].value))
 			{
-				throw new Exception($"\"{_tokens[1].value}\" is an invalid identifier.\n" +
-							"Identifiers must only contain letters, digits, underscores or dashes\n" +
-							"must not be a Scalp keyword and must not start with a digit.");
+				ErrorPos = _tokens[1].posInSourceLine;
+				throw new Exception($"Keyword \"{_tokens[1].value}\" can't be used as a variable name.");
 			}
 
 			var newVariable = new ScalpVariable(_tokens[1].value,
@@ -165,6 +152,40 @@ namespace Scalp.Brains
 			}
 
 			_variables.AddVariable(newVariable);
+		}
+
+		private void ReactAtVariableAssign()
+		{
+			if (_variables.VariableExists(_tokens[0].value))
+			{
+				var modifiableVariable = _variables.GetVariable(_tokens[0].value);
+				modifiableVariable.CopyValueFrom(
+						GetRvalue(modifiableVariable.Type.TypeName, _tokens[2]));
+			}
+			else
+			{
+				ErrorPos = _tokens[0].posInSourceLine;
+				throw new Exception($"Unknown identifier \"{_tokens[0].value}\".");
+			}
+		}
+
+		private void ReactAtIfStatement()
+		{
+			if (_tokens.Count == 1)
+			{
+				ErrorPos = _tokens[0].posInSourceLine + 1;
+				throw new Exception("Expected a condition after an \"if\" statement.");
+			}
+
+			ScalpVariable conditionIsTrue = GetRvalue("Bool", _tokens[1]);
+
+			if (_tokens.Count > 2)
+			{
+				ErrorPos = _tokens[1].posInSourceLine + _tokens[1].value.Length - 1;
+				throw new Exception($"Expected new line after the condition (\"{_tokens[1].value}\").");
+			}
+
+			_state.IfStack.Push((bool)conditionIsTrue.PrimitiveValue);
 		}
 
 		private ScalpVariable GetRvalue(string expectedType, ScalpToken token)
@@ -190,45 +211,40 @@ namespace Scalp.Brains
 			}
 			else if (_variables.VariableExists(token.value))
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($" Wrong type of variable \"{token.value}\".\n" +
 					$"Expected: \"{expectedType}\", got: \"{_variables.GetVariable(token.value).Type.TypeName}\".");
 			}
 			else if (_types.TypeExists(token.value))
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Expected a {expectedType} instance instead of typename \"{token.value}\".");
 			}
 			else if (token.kind == ScalpToken.Kind.StringLiteral)
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Expected a {expectedType} instance instead of a String literal.");
 			}
 			else if (token.kind == ScalpToken.Kind.CharLiteral)
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Expected a {expectedType} instance instead of a Char literal.");
 			}
 			else if (token.kind == ScalpToken.Kind.BoolLiteral)
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Expected a {expectedType} instance instead of a Bool literal.");
 			}
 			else if (token.kind == ScalpToken.Kind.Keyword)
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Expected a {expectedType} instance instead of a keyword \"{token.value}\".");
 			}
 			else
 			{
+				ErrorPos = token.posInSourceLine;
 				throw new Exception($"Unknown identifier \"{token.value}\".");
 			}
-		}
-
-		private bool IsValidIdentifierName(string name)
-		{
-			return name.All(ch => ('a' <= ch && ch <= 'z') ||
-								('A' <= ch && ch <= 'Z') ||
-								('0' <= ch && ch <= '9') ||
-								ch == '_' || ch == '-')
-				&&
-				!('0' <= name[0] && name[0] <= '9')
-				&&
-				!Tokenizer.KEYWORDS.Contains(name);
 		}
 	}
 }

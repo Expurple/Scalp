@@ -8,11 +8,13 @@ namespace Scalp.ProgramState
 	{
 		public readonly Types Types;
 		public readonly Variables Variables;
+		public Stack<bool> IfStack;
 
 		public FullProgramState()
 		{
 			Types = new Types();
 			Variables = new Variables(Types);
+			IfStack = new Stack<bool>();
 		}
 	}
 }

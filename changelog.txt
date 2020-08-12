@@ -1,4 +1,12 @@
-﻿== v0.2.0 ==
+﻿== v0.2.1 ==
+12 Aug 2020
+
+* Interpeter now points at errors with an ^
+* Fixed two big bugs with ifs:
+* 1) "if true"s not expecting endif afterwards
+* 2) endif closing all nested ifs at once
+
+== v0.2.0 ==
 11 Aug 2020
 
 * Added Bool variables and literals

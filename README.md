@@ -6,14 +6,12 @@ Scalp is a basic statically typed C-like language, except for using new lines in
 
 To know more about language and interpreter features, visit project [wiki](https://github.com/Expurple/Scalp/wiki).
 
-## What's new in v0.2.0 (11 Aug 2020)?
+## What's new in v0.2.1 (12 Aug 2020)?
 
-* Added *Bool* variables and literals
-* These have no operators yet
-* Added *print()* support for Bool
-* Added a primitive *if* statement (*if* and *endif* keywords)
-* Added more detailed error messages
-* Tabs in the source code are now ignored
+* Interpeter now points at errors with an **^**
+* Fixed two big bugs with *if*s:
+* 1) "*if true*"s not expecting *endif* afterwards
+* 2) *endif* closing all nested *if*s at once
 
 ## Versioning
 
