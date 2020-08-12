@@ -17,7 +17,6 @@ namespace Scalp.Brains
 		public int ErrorPos { get; private set; }
 		public bool ExitFlag { get; private set; }
 		public bool PrintFlag { get; private set; }
-		private bool _ignoreLineFlag = false;
 
 		public string PrintContents { get; private set; }
 
@@ -41,7 +40,7 @@ namespace Scalp.Brains
 			PrintFlag = false;
 			_tokens = _tokenizer.Tokenize(input);
 
-			if (_ignoreLineFlag)
+			if (_state.IfStack.Count != 0)
 			{
 				if (_tokens.Count > 0 && _tokens[0].value == "endif")
 				{
@@ -50,10 +49,15 @@ namespace Scalp.Brains
 						ErrorPos = _tokens[0].posInSourceLine + 4;
 						throw new Exception("Expected a new line after \"endif\".");
 					}
-					_ignoreLineFlag = false;
+					_state.IfStack.Pop();
+					return;
 				}
 
-				return;
+				if (_state.IfStack.Any(condition => condition == false)
+					&& !(_tokens.Count > 0 && _tokens[0].value == "if")) // need to register ifs
+				{
+					return;
+				}
 			}
 
 			ReactAtTokens();
@@ -181,10 +185,7 @@ namespace Scalp.Brains
 				throw new Exception($"Expected new line after the condition (\"{_tokens[1].value}\").");
 			}
 
-			if (!(bool)conditionIsTrue.PrimitiveValue)
-			{
-				_ignoreLineFlag = true;
-			}
+			_state.IfStack.Push((bool)conditionIsTrue.PrimitiveValue);
 		}
 
 		private ScalpVariable GetRvalue(string expectedType, ScalpToken token)
