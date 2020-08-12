@@ -69,11 +69,13 @@ namespace Scalp.Brains
 					{
 						_token.kind = ScalpToken.Kind.Keyword;
 						SaveActiveToken();
+						_token.posInSourceLine++;
 					}
 					else if (BOOL_LITERALS.Contains(_token.value))
 					{
 						_token.kind = ScalpToken.Kind.BoolLiteral;
 						SaveActiveToken();
+						_token.posInSourceLine++;
 					}
 				}
 			}
