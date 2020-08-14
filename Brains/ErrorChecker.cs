@@ -31,7 +31,25 @@ namespace Scalp.Brains
 				return; // Ignore empty lines
 			}
 
+			if (_tokens[0].value == "}")
+			{
+				CheckClosingScope();
+				return;
+			}
+		}
 
+		private void CheckClosingScope()
+		{
+			if (_state.IfStack.Count == 0)
+			{
+				SetErrorPos(_tokens[0].posInSourceLine);
+				throw new Exception("There's no scope to be closed.");
+			}
+			else if (_tokens.Count > 1)
+			{
+				SetErrorPos(_tokens[0].posInSourceLine + 1);
+				throw new Exception("Expected new line after \"}\".");
+			}
 		}
 	}
 }
