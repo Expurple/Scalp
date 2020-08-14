@@ -20,6 +20,7 @@ namespace Scalp.Brains
 
 		public string PrintContents { get; private set; }
 
+		private readonly ErrorChecker _errorChecker;
 		private readonly Tokenizer _tokenizer;
 		private List<ScalpToken> _tokens;
 
@@ -29,6 +30,7 @@ namespace Scalp.Brains
 
 		public Brains(FullProgramState programState)
 		{
+			_errorChecker = new ErrorChecker(pos => this.ErrorPos = pos);
 			_tokenizer = new Tokenizer(pos => this.ErrorPos = pos);
 			_state = programState;
 			_types = _state.Types;
