@@ -30,7 +30,7 @@ namespace Scalp.Brains
 
 		public Brains(FullProgramState programState)
 		{
-			_errorChecker = new ErrorChecker(pos => this.ErrorPos = pos);
+			_errorChecker = new ErrorChecker(programState, pos => this.ErrorPos = pos);
 			_tokenizer = new Tokenizer(pos => this.ErrorPos = pos);
 			_state = programState;
 			_types = _state.Types;
