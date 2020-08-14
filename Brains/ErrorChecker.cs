@@ -58,6 +58,8 @@ namespace Scalp.Brains
 				throw new Exception("Expected a condition after an \"if\" statement.");
 			}
 
+			CheckTokenForType(_tokens[1], "Bool");
+
 			if (_tokens.Count > 2)
 			{
 				SetErrorPos(_tokens[1].posInSourceLine + _tokens[1].value.Length);

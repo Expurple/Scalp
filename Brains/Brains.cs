@@ -174,9 +174,7 @@ namespace Scalp.Brains
 
 		private void ReactAtIfStatement()
 		{
-			// GetRvalue throws exceptions, it should be somehow called in ErrorChecker too.
 			ScalpVariable conditionIsTrue = GetRvalue("Bool", _tokens[1]);
-
 			_state.IfStack.Push((bool)conditionIsTrue.PrimitiveValue);
 			_variables.EnterNewScope();
 		}
