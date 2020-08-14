@@ -11,7 +11,7 @@ namespace Scalp
 			var brains = new Brains.Brains(state);
 
 			Console.WriteLine($"Scalp {GlobalConstants.VERSION} ({GlobalConstants.VERSION_DATE})");
-			Console.WriteLine($"Visit {GlobalConstants.GITHUB_REPO_LINK} for more info.");;
+			Console.WriteLine($"Visit {GlobalConstants.GITHUB_REPO_LINK} for more info.");
 			
 			while (true)
 			{

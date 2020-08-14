@@ -8,12 +8,12 @@ namespace Scalp.ProgramState
 {
 	class Variables
 	{
-		private Dictionary<string, ScalpVariable> _variables;
+		private Dictionary<string, ScalpVariable> _globals;
 		private readonly Types _types;
 
 		public bool VariableExists(string variableName)
 		{
-			return _variables.ContainsKey(variableName);
+			return _globals.ContainsKey(variableName);
 		}
 
 		public bool VariableExists(string variableName, ScalpType variableType)
@@ -26,7 +26,7 @@ namespace Scalp.ProgramState
 
 		public ScalpVariable GetVariable(string variableName)
 		{
-			return VariableExists(variableName) ? _variables[variableName] : null;
+			return VariableExists(variableName) ? _globals[variableName] : null;
 		}
 
 		public void AddVariable(ScalpVariable variable)
@@ -41,13 +41,13 @@ namespace Scalp.ProgramState
 			}
 			else
 			{
-				_variables.Add(variable.Name, variable);
+				_globals.Add(variable.Name, variable);
 			}
 		}
 
 		public Variables(Types types)
 		{
-			_variables = new Dictionary<string, ScalpVariable>();
+			_globals = new Dictionary<string, ScalpVariable>();
 			_types = types;
 		}
 	}
