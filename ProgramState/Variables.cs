@@ -9,7 +9,16 @@ namespace Scalp.ProgramState
 	class Variables
 	{
 		private Dictionary<string, ScalpVariable> _globals;
+		private List<ScalpScope> _scopes;
+
 		private readonly Types _types;
+
+		public Variables(Types types)
+		{
+			_globals = new Dictionary<string, ScalpVariable>();
+			_scopes = new List<ScalpScope>();
+			_types = types;
+		}
 
 		public bool VariableExists(string variableName)
 		{
@@ -43,12 +52,6 @@ namespace Scalp.ProgramState
 			{
 				_globals.Add(variable.Name, variable);
 			}
-		}
-
-		public Variables(Types types)
-		{
-			_globals = new Dictionary<string, ScalpVariable>();
-			_types = types;
 		}
 	}
 }
