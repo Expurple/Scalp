@@ -12,6 +12,8 @@ namespace Scalp.Brains
 	// A top level entity, responsible for the whole process of
 	// analyzing an input statement, executing it
 	// and probably returning something to print or an error message.
+	//
+	// Essentially, it's a Facade of the whole interpreter.
 	class Brains
 	{
 		public int ErrorPos { get; private set; }

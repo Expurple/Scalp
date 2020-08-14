@@ -7,6 +7,8 @@ using Scalp.ProgramState;
 
 namespace Scalp.Brains
 {
+	// It takes a tokenized statement and throws errors if it has any.
+	// Statement is not executed.
 	class ErrorChecker
 	{
 		FullProgramState _state;
