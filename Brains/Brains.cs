@@ -159,17 +159,9 @@ namespace Scalp.Brains
 
 		private void ReactAtVariableAssign()
 		{
-			if (_variables.VariableExists(_tokens[0].value))
-			{
-				var modifiableVariable = _variables.GetVariable(_tokens[0].value);
-				modifiableVariable.CopyValueFrom(
-						GetRvalue(modifiableVariable.Type.TypeName, _tokens[2]));
-			}
-			else
-			{
-				ErrorPos = _tokens[0].posInSourceLine;
-				throw new Exception($"Unknown identifier \"{_tokens[0].value}\".");
-			}
+			var modifiableVariable = _variables.GetVariable(_tokens[0].value);
+			modifiableVariable.CopyValueFrom(
+					GetRvalue(modifiableVariable.Type.TypeName, _tokens[2]));
 		}
 
 		private void ReactAtIfStatement()

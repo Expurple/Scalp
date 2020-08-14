@@ -48,6 +48,12 @@ namespace Scalp.Brains
 				CheckClosingScope();
 				return;
 			}
+
+			if (_tokens.Count >= 2 && _tokens[1].value == "=")
+			{
+				CheckVariableAssign();
+				return;
+			}
 		}
 
 		private void CheckIfStatement()
@@ -78,6 +84,31 @@ namespace Scalp.Brains
 			{
 				SetErrorPos(_tokens[0].posInSourceLine + 1);
 				throw new Exception("Expected new line after \"}\".");
+			}
+		}
+
+		private void CheckVariableAssign()
+		{
+			if (! _variables.VariableExists(_tokens[0].value))
+			{
+				SetErrorPos(_tokens[0].posInSourceLine);
+				throw new Exception($"\"{_tokens[0].value}\" is not an existing variable.");
+			}
+
+			string variableType = _variables.GetVariable(_tokens[0].value).Type.TypeName;
+			
+			if (_tokens.Count == 2)
+			{
+				SetErrorPos(_tokens[1].posInSourceLine + 1);
+				throw new Exception($"Expected a {variableType} value after \"=\".");
+			}
+
+			CheckTokenForType(_tokens[2], variableType);
+
+			if (_tokens.Count > 3)
+			{
+				SetErrorPos(_tokens[2].posInSourceLine + _tokens[2].value.Length);
+				throw new Exception($"Expected new line after the value \"{_tokens[2].value}\".");
 			}
 		}
 
