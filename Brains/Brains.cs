@@ -42,12 +42,12 @@ namespace Scalp.Brains
 
 			if (_state.IfStack.Count != 0)
 			{
-				if (_tokens.Count > 0 && _tokens[0].value == "endif")
+				if (_tokens.Count > 0 && _tokens[0].value == "}")
 				{
 					if (_tokens.Count > 1)
 					{
 						ErrorPos = _tokens[0].posInSourceLine + 4;
-						throw new Exception("Expected a new line after \"endif\".");
+						throw new Exception("Expected a new line after \"}\".");
 					}
 					_state.IfStack.Pop();
 					_variables.LeaveScope();
