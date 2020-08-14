@@ -22,7 +22,7 @@ namespace Scalp.ProgramState
 
 		public bool VariableExists(string variableName)
 		{
-			return _globals.ContainsKey(variableName);
+			return GetVariable(variableName) != null;
 		}
 
 		public bool VariableExists(string variableName, ScalpType variableType)
@@ -35,7 +35,20 @@ namespace Scalp.ProgramState
 
 		public ScalpVariable GetVariable(string variableName)
 		{
-			return VariableExists(variableName) ? _globals[variableName] : null;
+			for (int i = _scopes.Count - 1; i >= 0; i--)
+			{
+				if (_scopes[i].Variables.ContainsKey(variableName))
+				{
+					return _scopes[i].Variables[variableName];
+				}
+
+				if (_scopes[i].HidesPrev)
+				{
+					break;
+				}
+			}
+
+			return _globals.ContainsKey(variableName) ? _globals[variableName] : null;
 		}
 
 		public void AddVariable(ScalpVariable variable)
@@ -50,7 +63,14 @@ namespace Scalp.ProgramState
 			}
 			else
 			{
-				_globals.Add(variable.Name, variable);
+				if (_scopes.Count > 0)
+				{
+					_scopes[_scopes.Count - 1].Variables.Add(variable.Name, variable);
+				}
+				else
+				{
+					_globals.Add(variable.Name, variable);
+				}
 			}
 		}
 

@@ -50,6 +50,7 @@ namespace Scalp.Brains
 						throw new Exception("Expected a new line after \"endif\".");
 					}
 					_state.IfStack.Pop();
+					_variables.LeaveScope();
 					return;
 				}
 
@@ -187,6 +188,7 @@ namespace Scalp.Brains
 			}
 
 			_state.IfStack.Push((bool)conditionIsTrue.PrimitiveValue);
+			_variables.EnterNewScope();
 		}
 
 		private ScalpVariable GetRvalue(string expectedType, ScalpToken token)
