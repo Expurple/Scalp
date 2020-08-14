@@ -26,15 +26,37 @@ namespace Scalp.Brains
 		public void CheckLineOfCode(List<ScalpToken> tokens)
 		{
 			_tokens = tokens;
+			
 			if (_tokens.Count == 0)
 			{
 				return; // Ignore empty lines
+			}
+
+			if (_tokens[0].value == "if")
+			{
+				CheckIfStatement();
+				return;
 			}
 
 			if (_tokens[0].value == "}")
 			{
 				CheckClosingScope();
 				return;
+			}
+		}
+
+		private void CheckIfStatement()
+		{
+			if (_tokens.Count == 1)
+			{
+				SetErrorPos(_tokens[0].posInSourceLine + 2);
+				throw new Exception("Expected a condition after an \"if\" statement.");
+			}
+
+			if (_tokens.Count > 2)
+			{
+				SetErrorPos(_tokens[1].posInSourceLine + _tokens[1].value.Length);
+				throw new Exception($"Expected new line after the condition \"{_tokens[1].value}\".");
 			}
 		}
 

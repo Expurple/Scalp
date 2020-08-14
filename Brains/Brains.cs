@@ -174,19 +174,8 @@ namespace Scalp.Brains
 
 		private void ReactAtIfStatement()
 		{
-			if (_tokens.Count == 1)
-			{
-				ErrorPos = _tokens[0].posInSourceLine + 1;
-				throw new Exception("Expected a condition after an \"if\" statement.");
-			}
-
+			// GetRvalue throws exceptions, it should be somehow called in ErrorChecker too.
 			ScalpVariable conditionIsTrue = GetRvalue("Bool", _tokens[1]);
-
-			if (_tokens.Count > 2)
-			{
-				ErrorPos = _tokens[1].posInSourceLine + _tokens[1].value.Length - 1;
-				throw new Exception($"Expected new line after the condition (\"{_tokens[1].value}\").");
-			}
 
 			_state.IfStack.Push((bool)conditionIsTrue.PrimitiveValue);
 			_variables.EnterNewScope();
