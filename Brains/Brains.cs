@@ -28,13 +28,14 @@ namespace Scalp.Brains
 		private readonly Types _types;
 		private readonly Variables _variables;
 
-		public Brains(FullProgramState programState)
+		public Brains()
 		{
-			_errorChecker = new ErrorChecker(programState, pos => this.ErrorPos = pos);
-			_tokenizer = new Tokenizer(pos => this.ErrorPos = pos);
-			_state = programState;
+			_state = new FullProgramState();
 			_types = _state.Types;
 			_variables = _state.Variables;
+
+			_tokenizer = new Tokenizer(pos => this.ErrorPos = pos);
+			_errorChecker = new ErrorChecker(_state, pos => this.ErrorPos = pos);
 		}
 
 		public void ReactAt(string input)

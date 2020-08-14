@@ -7,8 +7,7 @@ namespace Scalp
 	{
 		static void Main(string[] args)
 		{
-			var state = new ProgramState.FullProgramState();
-			var brains = new Brains.Brains(state);
+			var brains = new Brains.Brains();
 
 			Console.WriteLine($"Scalp {GlobalConstants.VERSION} ({GlobalConstants.VERSION_DATE})");
 			Console.WriteLine($"Visit {GlobalConstants.GITHUB_REPO_LINK} for more info.");
