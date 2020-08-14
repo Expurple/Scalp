@@ -12,6 +12,9 @@ namespace Scalp.Brains
 	class ErrorChecker
 	{
 		FullProgramState _state;
+		Variables _variables;
+		Types _types;
+
 		private List<ScalpToken> _tokens;
 
 		public delegate void Setter(int pos);
@@ -20,6 +23,8 @@ namespace Scalp.Brains
 		public ErrorChecker(FullProgramState state, Setter meansToSetErrorPos)
 		{
 			_state = state;
+			_variables = _state.Variables;
+			_types = _state.Types;
 			SetErrorPos = meansToSetErrorPos;
 		}
 
@@ -71,6 +76,52 @@ namespace Scalp.Brains
 			{
 				SetErrorPos(_tokens[0].posInSourceLine + 1);
 				throw new Exception("Expected new line after \"}\".");
+			}
+		}
+
+		public void CheckTokenForType(ScalpToken token, string expectedType)
+		{
+			// Cases where everyting is fine:
+			if ((expectedType == "String" && token.kind == ScalpToken.Kind.StringLiteral)
+				||
+				(expectedType == "Bool" && token.kind == ScalpToken.Kind.BoolLiteral)
+				||
+				_state.Variables.VariableExists(token.value, _state.Types.GetType(expectedType)))
+			{
+				return;
+			}
+
+			// Something's not fine:
+			SetErrorPos(token.posInSourceLine);
+
+			if (_variables.VariableExists(token.value))
+			{
+				throw new Exception($" Wrong type of variable \"{token.value}\".\n" +
+					$"Expected: \"{expectedType}\", got: \"{_variables.GetVariable(token.value).Type.TypeName}\".");
+			}
+			else if (_types.TypeExists(token.value))
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of typename \"{token.value}\".");
+			}
+			else if (token.kind == ScalpToken.Kind.StringLiteral)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a String literal.");
+			}
+			else if (token.kind == ScalpToken.Kind.CharLiteral)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a Char literal.");
+			}
+			else if (token.kind == ScalpToken.Kind.BoolLiteral)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a Bool literal.");
+			}
+			else if (token.kind == ScalpToken.Kind.Keyword)
+			{
+				throw new Exception($"Expected a {expectedType} instance instead of a keyword \"{token.value}\".");
+			}
+			else
+			{
+				throw new Exception($"Unknown identifier \"{token.value}\".");
 			}
 		}
 	}

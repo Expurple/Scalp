@@ -183,6 +183,8 @@ namespace Scalp.Brains
 
 		private ScalpVariable GetRvalue(string expectedType, ScalpToken token)
 		{
+			_errorChecker.CheckTokenForType(token, expectedType);
+
 			// Creating a tempopary string from a literal is a type-specific case
 			if (expectedType == "String" && token.kind == ScalpToken.Kind.StringLiteral)
 			{
@@ -198,46 +200,8 @@ namespace Scalp.Brains
 				return boolFromLiteral;
 			}
 
-			else if (_variables.VariableExists(token.value, _types.GetType(expectedType)))
-			{
-				return _variables.GetVariable(token.value);
-			}
-			else if (_variables.VariableExists(token.value))
-			{
-				ErrorPos = token.posInSourceLine;
-				throw new Exception($" Wrong type of variable \"{token.value}\".\n" +
-					$"Expected: \"{expectedType}\", got: \"{_variables.GetVariable(token.value).Type.TypeName}\".");
-			}
-			else if (_types.TypeExists(token.value))
-			{
-				ErrorPos = token.posInSourceLine;
-				throw new Exception($"Expected a {expectedType} instance instead of typename \"{token.value}\".");
-			}
-			else if (token.kind == ScalpToken.Kind.StringLiteral)
-			{
-				ErrorPos = token.posInSourceLine;
-				throw new Exception($"Expected a {expectedType} instance instead of a String literal.");
-			}
-			else if (token.kind == ScalpToken.Kind.CharLiteral)
-			{
-				ErrorPos = token.posInSourceLine;
-				throw new Exception($"Expected a {expectedType} instance instead of a Char literal.");
-			}
-			else if (token.kind == ScalpToken.Kind.BoolLiteral)
-			{
-				ErrorPos = token.posInSourceLine;
-				throw new Exception($"Expected a {expectedType} instance instead of a Bool literal.");
-			}
-			else if (token.kind == ScalpToken.Kind.Keyword)
-			{
-				ErrorPos = token.posInSourceLine;
-				throw new Exception($"Expected a {expectedType} instance instead of a keyword \"{token.value}\".");
-			}
-			else
-			{
-				ErrorPos = token.posInSourceLine;
-				throw new Exception($"Unknown identifier \"{token.value}\".");
-			}
+			// Normal case:
+			return _variables.GetVariable(token.value);
 		}
 	}
 }
