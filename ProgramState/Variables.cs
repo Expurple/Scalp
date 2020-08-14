@@ -53,5 +53,22 @@ namespace Scalp.ProgramState
 				_globals.Add(variable.Name, variable);
 			}
 		}
+
+		public void EnterNewScope()
+		{
+			_scopes.Add(new ScalpScope(false));
+		}
+
+		public void LeaveScope()
+		{
+			if (_scopes.Count > 0)
+			{
+				_scopes.RemoveAt(_scopes.Count - 1);
+			}
+			else
+			{
+				throw new Exception("There's no scope to close.");
+			}
+		}
 	}
 }
