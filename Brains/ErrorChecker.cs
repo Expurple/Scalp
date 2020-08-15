@@ -45,6 +45,13 @@ namespace Scalp.Brains
 				return;
 			}
 
+			// exit() is a special case, as functions don't exist yet
+			if (_tokens.Count == 3 && _tokens[0].value == "exit" &&
+				_tokens[1].value == "(" && _tokens[2].value == ")")
+			{
+				return;
+			}
+
 			if (_tokens[0].value == "if")
 			{
 				CheckIfStatement();
@@ -68,6 +75,10 @@ namespace Scalp.Brains
 				CheckVariableAssign();
 				return;
 			}
+
+			SetErrorPos(_tokens[0].posInSourceLine);
+			throw new Exception("The grammar of this line is incorrect. Interpreter can't figure it out.\n" +
+				$"You can learn more about Scalp syntax at {GlobalConstants.GITHUB_WIKI_LINK}");
 		}
 
 		private void CheckIfStatement()
