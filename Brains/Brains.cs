@@ -116,11 +116,12 @@ namespace Scalp.Brains
 			// An "overload" for Bool
 			try
 			{
+				_errorChecker.CheckTokenForType(_tokens[2], "Bool");
 				var boolToPrint = GetRvalue("Bool", _tokens[2]);
 				return boolToPrint.PrimitiveValue == null ? "null" :
 					((bool)boolToPrint.PrimitiveValue == true ? "true" : "false");
 			}
-			catch { }
+			catch { } // fine, it's not a Bool
 
 			// An "overload" for String
 			var stringToPrint = GetRvalue("String", _tokens[2]);
@@ -162,8 +163,6 @@ namespace Scalp.Brains
 
 		private ScalpVariable GetRvalue(string expectedType, ScalpToken token)
 		{
-			_errorChecker.CheckTokenForType(token, expectedType);
-
 			// Creating a tempopary string from a literal is a type-specific case
 			if (expectedType == "String" && token.kind == ScalpToken.Kind.StringLiteral)
 			{
