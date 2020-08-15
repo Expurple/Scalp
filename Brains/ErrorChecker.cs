@@ -37,6 +37,14 @@ namespace Scalp.Brains
 				return; // Ignore empty lines
 			}
 
+			// print() is a special case, as functions don't exist yet
+			if (_tokens.Count == 4 && _tokens[0].value == "print" &&
+				_tokens[1].value == "(" && _tokens[3].value == ")")
+			{
+				CheckTokenForTypes(_tokens[2], new List<string> { "String", "Bool" });
+				return;
+			}
+
 			if (_tokens[0].value == "if")
 			{
 				CheckIfStatement();
@@ -205,6 +213,22 @@ namespace Scalp.Brains
 			{
 				throw new Exception($"Unknown identifier \"{token.value}\".");
 			}
+		}
+
+		public void CheckTokenForTypes(ScalpToken token, List<string> types)
+		{
+			foreach (var type in types)
+			{
+				try
+				{
+					CheckTokenForType(token, type);
+					return;
+				}
+				catch { }
+			}
+			SetErrorPos(token.posInSourceLine);
+			throw new Exception($"\"{token.value}\" doesn't match any of types: " +
+								string.Join(", ", types));
 		}
 	}
 }
