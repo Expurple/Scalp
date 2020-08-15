@@ -49,6 +49,12 @@ namespace Scalp.Brains
 				return;
 			}
 
+			if (_types.TypeExists(_tokens[0].value))
+			{
+				CheckVariableDeclaration();
+				return;
+			}
+
 			if (_tokens.Count >= 2 && _tokens[1].value == "=")
 			{
 				CheckVariableAssign();
@@ -84,6 +90,49 @@ namespace Scalp.Brains
 			{
 				SetErrorPos(_tokens[0].posInSourceLine + 1);
 				throw new Exception("Expected new line after \"}\".");
+			}
+		}
+
+		private void CheckVariableDeclaration()
+		{
+			if (_tokens.Count == 1)
+			{
+				SetErrorPos(_tokens[0].posInSourceLine + _tokens[0].value.Length);
+				throw new Exception($"Expected an identifier after typename \"{_tokens[0].value}\".");
+			}
+			if (_tokens[1].kind != ScalpToken.Kind.Identifier)
+			{
+				SetErrorPos(_tokens[1].posInSourceLine);
+				throw new Exception($"Expected an identifier after typename \"{_tokens[0].value}\".");
+			}
+			if (_types.TypeExists(_tokens[1].value))
+			{
+				SetErrorPos(_tokens[1].posInSourceLine);
+				throw new Exception($"\"{_tokens[1].value}\" is already registered as a type.");
+			}
+			if (_variables.VariableExists(_tokens[1].value))
+			{
+				SetErrorPos(_tokens[1].posInSourceLine);
+				throw new Exception($"Redefinition of variable \"{_tokens[1].value}\".");
+			}
+			if (_tokens.Count >= 3 && _tokens[2].value != "=")
+			{
+				SetErrorPos(_tokens[2].posInSourceLine);
+				throw new Exception("Expected \"=\" after the identifier.");
+			}
+			if (_tokens.Count == 3)
+			{
+				SetErrorPos(_tokens[2].posInSourceLine + 1);
+				throw new Exception($"Expected a {_tokens[0].value} value after \"=\".");
+			}
+			if (_tokens.Count >= 4)
+			{
+				CheckTokenForType(_tokens[3], _tokens[0].value);
+			}
+			if (_tokens.Count > 4)
+			{
+				SetErrorPos(_tokens[3].posInSourceLine + _tokens[3].value.Length);
+				throw new Exception($"Expected a new line after \"{_tokens[3].value}\".");
 			}
 		}
 

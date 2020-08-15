@@ -90,7 +90,7 @@ namespace Scalp.Brains
 			}
 
 			// Variable declaration
-			if (_types.TypeExists(_tokens[0].value) && (_tokens.Count == 2 || _tokens.Count == 4))
+			if (_types.TypeExists(_tokens[0].value))
 			{
 				ReactAtVariableDeclaration();
 				return;
@@ -141,14 +141,7 @@ namespace Scalp.Brains
 			var newVariable = new ScalpVariable(_tokens[1].value,
 												_types.GetType(_tokens[0].value));
 
-			ErrorPos = _tokens[1].posInSourceLine;
-
-			if (Tokenizer.KEYWORDS.Contains(_tokens[1].value))
-			{
-				throw new Exception($"Keyword \"{_tokens[1].value}\" can't be used as a variable name.");
-			}
-
-			if (_tokens.Count == 4 && _tokens[2].value == "=")
+			if (_tokens.Count == 4)
 			{
 				newVariable.CopyValueFrom(
 						GetRvalue(newVariable.Type.TypeName, _tokens[3]));
