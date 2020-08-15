@@ -19,7 +19,7 @@ namespace Scalp
 
 				try
 				{
-					brains.ReactAt(input);
+					brains.ProcessLineOfCode(input);
 				}
 				catch (Exception e)
 				{

@@ -40,10 +40,10 @@ namespace Scalp.Brains
 			_errorChecker = new ErrorChecker(_state, pos => this.ErrorPos = pos);
 		}
 
-		public void ReactAt(string input)
+		public void ProcessLineOfCode(string lineOfCode)
 		{
 			PrintFlag = false;
-			_tokens = _tokenizer.Tokenize(input);
+			_tokens = _tokenizer.Tokenize(lineOfCode);
 			_errorChecker.CheckLineOfCode(_tokens);
 
 			if (_state.IfStack.Count != 0)
