@@ -84,7 +84,7 @@ namespace Scalp.Brains
 			if (_tokens.Count == 4 && _tokens[0].value == "print" &&
 				_tokens[1].value == "(" && _tokens[3].value == ")")
 			{
-				PrintContents = TryGetPrintContents();
+				PrintContents = GetPrintContents();
 				PrintFlag = true;
 				return;
 			}
@@ -111,7 +111,7 @@ namespace Scalp.Brains
 			}
 		}
 
-		private string TryGetPrintContents()
+		private string GetPrintContents()
 		{
 			// An "overload" for Bool
 			try
