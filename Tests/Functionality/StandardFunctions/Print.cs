@@ -8,12 +8,11 @@ using Scalp.Brains;
 
 namespace Tests.Functionality.StandardFunctions
 {
-	public class Print
+	public class Print : BrainsSetupBase
 	{
 		[Test]
 		public void HelloWorld()
 		{
-			Brains brains = new Brains();
 			brains.ProcessLineOfCode("print(\"Hello World!\")");
 			Assert.IsTrue(brains.PrintFlag);
 			Assert.AreEqual("Hello World!", brains.PrintContents);

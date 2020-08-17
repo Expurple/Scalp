@@ -8,16 +8,8 @@ using Scalp.Brains;
 
 namespace Tests.Functionality.LanguageFeatures
 {
-	public class IfStatements
+	public class IfStatements : BrainsSetupBase
 	{
-		Brains brains;
-
-		[SetUp]
-		public void SetupBrains()
-		{
-			brains = new Brains();
-		}
-
 		[Test]
 		public void IfFalseShouldntExecute()
 		{
