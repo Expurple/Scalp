@@ -10,10 +10,17 @@ namespace Tests.Functionality.LanguageFeatures
 {
 	public class IfStatements
 	{
+		Brains brains;
+
+		[SetUp]
+		public void SetupBrains()
+		{
+			brains = new Brains();
+		}
+
 		[Test]
 		public void IfFalseShouldntExecute()
 		{
-			Brains brains = new Brains();
 			brains.ProcessLineOfCode("if false");
 			brains.ProcessLineOfCode("	print(\"Test\")");
 			Assert.IsFalse(brains.PrintFlag);
@@ -22,7 +29,6 @@ namespace Tests.Functionality.LanguageFeatures
 		[Test]
 		public void IfShouldСreateScope()
 		{
-			Brains brains = new Brains();
 			brains.ProcessLineOfCode("if true");
 			brains.ProcessLineOfCode("	String foo");
 			brains.ProcessLineOfCode("}");
@@ -40,7 +46,6 @@ namespace Tests.Functionality.LanguageFeatures
 		[Test]
 		public void FalseBodyShouldBeCheckedForErrors()
 		{
-			Brains brains = new Brains();
 			brains.ProcessLineOfCode("if false");
 			try
 			{
@@ -56,7 +61,6 @@ namespace Tests.Functionality.LanguageFeatures
 		[Test]
 		public void ClosingNotExistingScopeShouldFail()
 		{
-			Brains brains = new Brains();
 			brains.ProcessLineOfCode("if true");
 			brains.ProcessLineOfCode("}");
 			try
@@ -73,7 +77,6 @@ namespace Tests.Functionality.LanguageFeatures
 		[Test]
 		public void BraceShouldCloseOneScopeAtATime()
 		{
-			Brains brains = new Brains();
 			brains.ProcessLineOfCode("if false");
 			brains.ProcessLineOfCode("	if true");
 			brains.ProcessLineOfCode("	}");
