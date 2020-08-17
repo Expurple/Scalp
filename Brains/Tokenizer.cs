@@ -7,14 +7,16 @@ using Scalp.CoreClasses;
 
 namespace Scalp.Brains
 {
+	// It transforms a line of source code into a list of separate tokens
+	// and throws errors if these tokens look really messed up.
 	class Tokenizer
 	{
 		public static readonly List<char> SEPARATE_CHAR_TOKENS = new List<char>
-			{ '=', '(', ')' };
+			{ '=', '(', ')', '}' };
 		public static readonly List<string> BOOL_LITERALS = new List<string>
 			{ "true", "false" };
 		public static readonly List<string> KEYWORDS = new List<string>
-			{ "if", "endif" };
+			{ "if" };
 
 		private int i;
 		private string _statement;
