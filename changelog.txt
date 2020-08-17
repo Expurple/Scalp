@@ -1,4 +1,13 @@
-﻿== v0.2.1 ==
+﻿== v0.2.2 ==
+17 Aug 2020
+
+* Added scopes for "if" statements
+* Statements below "if false" statements are now checked for errors
+* Replaced "endif" with "}"
+* Fixed variable redefinition error message, now it points at the variable
+* Added some more detailed error messages
+
+== v0.2.1 ==
 12 Aug 2020
 
 * Interpeter now points at errors with an ^
