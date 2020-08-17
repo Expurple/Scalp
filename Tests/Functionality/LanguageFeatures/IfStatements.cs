@@ -24,30 +24,18 @@ namespace Tests.Functionality.LanguageFeatures
 			brains.ProcessLineOfCode("if true");
 			brains.ProcessLineOfCode("	String foo");
 			brains.ProcessLineOfCode("}");
-			try
-			{
-				brains.ProcessLineOfCode("print(foo)");
-				Assert.Fail("Should've been an exception about foo not defined");
-			}
-			catch (Exception e)
-			{
-				Assert.Pass("Scalp failed with an error: " + e.Message);
-			}
+			Assert.Throws<Exception>(
+				() => { brains.ProcessLineOfCode("print(foo)"); },
+				"Should've been an exception about foo not defined");
 		}
 
 		[Test]
 		public void FalseBodyShouldBeCheckedForErrors()
 		{
 			brains.ProcessLineOfCode("if false");
-			try
-			{
-				brains.ProcessLineOfCode("	some gibberish here");
-				Assert.Fail("Should've been a \"bad grammar\" exception");
-			}
-			catch (Exception e)
-			{
-				Assert.Pass("Scalp failed with an error: " + e.Message);
-			}
+			Assert.Throws<Exception>(
+				() => { brains.ProcessLineOfCode("	some gibberish here"); },
+				"Should've been a \"bad grammar\" exception");
 		}
 
 		[Test]
@@ -55,15 +43,9 @@ namespace Tests.Functionality.LanguageFeatures
 		{
 			brains.ProcessLineOfCode("if true");
 			brains.ProcessLineOfCode("}");
-			try
-			{
-				brains.ProcessLineOfCode("}");
-				Assert.Fail("Should've been a \"no scope to close\" exception");
-			}
-			catch (Exception e)
-			{
-				Assert.Pass("Scalp failed with an error: " + e.Message);
-			}
+			Assert.Throws<Exception>(
+				() => { brains.ProcessLineOfCode("}"); },
+				"Should've been a \"no scope to close\" exception");
 		}
 
 		[Test]
