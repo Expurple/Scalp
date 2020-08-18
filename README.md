@@ -2,9 +2,9 @@
 
 An interpreter for my own simple scripting language, which I develop for fun and education.
 
-Scalp is a basic statically typed C-like language, which howewer has some similarities to Python syntax.
+Scalp is a statically typed C-like language, which howewer has some similarities to Python syntax.
 
-To know more about language and interpreter features, visit project [wiki](https://github.com/Expurple/Scalp/wiki).
+To know more about language and interpreter features, visit [project wiki](https://github.com/Expurple/Scalp/wiki).
 
 ## What's new in v0.2.2 (17 Aug 2020)?
 
@@ -15,6 +15,18 @@ To know more about language and interpreter features, visit project [wiki](https
 * Added some more detailed error messages
 
 See code example at the [wiki](https://github.com/Expurple/Scalp/wiki/v0.2.2).
+
+## How to build
+
+I use Visual Studio, its `.sln` and `.csproj` files are included in the repository.
+
+## Tests
+
+I use [NUnit](https://nunit.org) for testing.
+
+The tests are located in project `Tests/Tests.csproj`.
+
+I run the tests with `dotnet test` command from the command line in solution directory.
 
 ## Versioning
 
