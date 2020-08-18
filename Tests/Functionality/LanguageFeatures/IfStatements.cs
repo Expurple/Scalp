@@ -11,6 +11,33 @@ namespace Tests.Functionality.LanguageFeatures
 	public class IfStatements : BrainsSetupBase
 	{
 		[Test]
+		public void InvalidConditionSyntaxShouldFail()
+		{
+			Assert.Throws<Exception>(
+				() => { brains.ProcessLineOfCode("if (true) {"); });
+
+			Assert.Throws<Exception>(
+				() => { brains.ProcessLineOfCode("if true {"); });
+			
+			Assert.Throws<Exception>(
+				() => { brains.ProcessLineOfCode("if true:"); });
+			
+			Assert.Throws<Exception>(
+				() => { brains.ProcessLineOfCode("if \"some string\""); });
+			
+			Assert.Throws<Exception>(
+				() => { brains.ProcessLineOfCode("if jgn r35y wgj"); });
+		}
+
+		public void NullConditionShouldFail()
+		{
+			brains.ProcessLineOfCode("bool someNullBool");
+
+			Assert.Throws<Exception>(
+				() => { brains.ProcessLineOfCode("if someNullBool"); });
+		}
+
+		[Test]
 		public void IfFalseShouldntExecute()
 		{
 			brains.ProcessLineOfCode("if false");
@@ -55,7 +82,8 @@ namespace Tests.Functionality.LanguageFeatures
 			brains.ProcessLineOfCode("	if true");
 			brains.ProcessLineOfCode("	}");
 			brains.ProcessLineOfCode("	print(\"This slouldn't be printed\")");
-			Assert.IsFalse(brains.PrintFlag, "The first \"if\" is somehow closed");
+			Assert.IsFalse(brains.PrintFlag,
+					"The first \"if\" is somehow closed");
 		}
 	}
 }
