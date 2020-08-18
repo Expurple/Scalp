@@ -14,7 +14,7 @@ namespace Scalp.Brains
 	// and probably returning something to print or an error message.
 	//
 	// Essentially, it's a Facade of the whole interpreter.
-	public class Brains
+	class Brains
 	{
 		public int ErrorPos { get; private set; }
 		public bool ExitFlag { get; private set; }

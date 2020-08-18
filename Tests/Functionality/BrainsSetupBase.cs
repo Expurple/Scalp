@@ -11,7 +11,7 @@ namespace Tests.Functionality
 	// Functionality is always tested upon Brains, so I've hidden the setup in here.
 	public abstract class BrainsSetupBase
 	{
-		protected Brains brains;
+		private protected Brains brains;
 
 		[SetUp]
 		public void SetupBrains()
